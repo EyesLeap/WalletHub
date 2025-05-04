@@ -1,0 +1,83 @@
+.tableContainer {
+  padding: 1rem; 
+}
+
+.title {
+  font-family: 'Lato', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--color-text);
+  
+}
+
+.paper {
+  box-shadow: none;
+  overflow: hidden;
+  background: var(--gradient-light);
+  border-radius: 6px;
+}
+
+.table {
+  min-width: 700px;
+  border-collapse: collapse;
+}
+
+.tableHead {
+  border-bottom: 2px solid var(--color-border);
+}
+
+.tableHeaderCell {
+  font-weight: 800;
+  font-size: 0.9rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--color-text-muted);
+  padding: 8px 12px;
+  border-bottom: none;
+}
+
+.tableBody {
+  background-color: rgba(50, 50, 50, 0.1); 
+}
+
+.tableRow {
+  &:hover {
+    background-color: rgba(50, 50, 50, 0.1);
+  }
+}
+
+.cell {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-border);
+  padding: 12px 12px; 
+  line-height: 3; 
+}
+
+.cellGreen {
+  color: #37a356; 
+}
+
+.cellRed {
+  color: var(--color-danger); 
+}
+
+.cellGray {
+  color: var(--color-text-muted); 
+}
+
+.symbolText {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin-left: 0.5rem;
+}
+
+.assetName {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text);
+}

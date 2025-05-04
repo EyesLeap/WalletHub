@@ -1,0 +1,19 @@
+.navbar-link {
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--color-text);
+}
+
+.navbar-link:hover {
+  color: var(--color-accent);
+}
+
+.navbar-button {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--gradient-blue-accent);
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.navbar-button:hover {
+  opacity: 0.8;
+}

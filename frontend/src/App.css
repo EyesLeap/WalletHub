@@ -1,0 +1,45 @@
+
+
+:root {
+  --color-bg-dark: #1a1c27;
+  --color-bg: #222531;
+  --color-bg-light: #2c2f3e;
+  --color-input-bg: #474a5e;
+
+  --color-border: #3b3f51;
+
+  --color-text: #ffffff;
+  --color-text-muted: #9ca3af;
+
+  --color-accent: #3b82f6;
+  --color-accent-hover: #2563eb;
+ 
+  --color-selected-portfolio: #3c3f4f;
+
+  --color-options: #5d6070;
+
+  --color-profit: #47d36f; 
+  --color-danger: #ec4343;
+  --color-buy: #3d9c59; 
+  --color-sell: #c54747; 
+
+  --gradient-main: linear-gradient(to bottom right, #222531, #1a1c27);
+  --gradient-light: linear-gradient(to bottom right, #2c2f3e, #222531);
+  --gradient-blue-accent: linear-gradient(to right, #3b82f6, #2563eb);
+  --gradient-red-accent: linear-gradient(to right, #ef4444, #d32f2f);
+
+  --text-regular: 'IBM Plex Sans', sans-serif;
+}
+
+
+body {
+  background: var(--gradient-main);
+  color: var(--color-text);
+  font-family: var(--text-regular);
+}
+
+input, select, button, .number {
+  
+  font-family: var(--text-regular);
+  font-variant-numeric: tabular-nums; 
+}

@@ -1,0 +1,16 @@
+.addTransactionButton {
+  background: var(--gradient-blue-accent); 
+  color: var(--color-text);
+  font-weight: bold;
+  font-family: 'IBM Plex Sans', sans-serif;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.addTransactionButton:hover {
+  opacity: 0.8;
+}
+

@@ -1,0 +1,30 @@
+.portfolioTabs {
+  width: 100%;
+}
+
+.portfolioTabsNav {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabButton {
+  padding: 8px 16px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color 0.5s ease, border-color 0.5s ease;
+}
+
+.tabButton:hover {
+  color: var(--color-text);
+}
+
+.tabButtonActive {
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+
