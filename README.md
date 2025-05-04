@@ -1,6 +1,6 @@
 # WalletHub
 
-**WalletHub** is an application for tracking your cryptocurrency portfolio. It allows users to manage their crypto assets, track transactions, and view the changes in their portfolio value over time. The app integrates with the CoinMarketCap API to provide up-to-date cryptocurrency information and offers an intuitive interface for managing portfolios.
+**WalletHub** is an application for tracking your cryptocurrency portfolios. It allows users to manage multiple crypto assets, track transactions, and view the changes in their portfolio values over time. The app integrates with the CoinMarketCap API to provide up-to-date cryptocurrency information and offers an intuitive interface for managing portfolios.
 
 ![WalletHub Preview](frontend/src/WalletHubPreview.png)
 
@@ -37,9 +37,10 @@ The application is built using a variety of powerful technologies:
 - Manage the quantity of cryptocurrencies.
 
 ### 2. 💳 **Transactions**
-- Add and track transactions for each cryptocurrency.
-- Full filtering functionality for transactions by date, type (buy/sell), and symbol.
-- Transaction history of buys and sells.
+- Create and manage multiple cryptocurrency portfolios.
+- Add cryptocurrencies to each portfolio.
+- View the current value of assets in each portfolio.
+- Manage the quantity of cryptocurrencies within each portfolio.
 
 ### 3. 📊 **Charts**
 - **Historical portfolio value charts** for 24 hours, 7 days, 30 days, and all-time data.
