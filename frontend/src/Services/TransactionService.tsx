@@ -3,7 +3,7 @@ import { PortfolioGet, PortfolioPost } from "../Models/Portfolio";
 import { handleError } from "../Helpers/ErrorHandler";
 import { TransactionGet, TransactionPost, TransactionQuery } from "../Models/Transaction";
 
-const api = process.env.REACT_APP_API_URL + "transactions/";
+const api = "http://localhost:5066/api/transactions/";
 
 
 

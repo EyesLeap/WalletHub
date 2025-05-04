@@ -3,7 +3,7 @@ import axios from "axios";
 import { PortfolioPost, PortfolioGet, PortfolioTotalValueGet, PortfolioDailyChangeGet } from "../Models/Portfolio";
 import { AssetTableValueGet } from "../Models/Asset";
 
-const api = process.env.REACT_APP_API_URL + "portfolios/";
+const api = "http://localhost:5066/api/portfolios/";
 
 export const getPortfolioTotalValueAPI = async (portfolioId: number) => {
   try {

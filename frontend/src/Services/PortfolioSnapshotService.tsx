@@ -2,7 +2,8 @@ import axios from "axios";
 import { AssetGet } from "../Models/Asset";
 import { PortfolioSnapshotGet, PortfolioSnapshotRange } from "../Models/PortfolioSnapshot";
 
-const api = process.env.REACT_APP_API_URL + "portfolio-snapshots/";
+const api = "http://localhost:5066/api/portfolio-snapshots/";
+
 
 
 

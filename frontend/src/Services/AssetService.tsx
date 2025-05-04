@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AssetGet } from "../Models/Asset";
 
-const api = process.env.REACT_APP_API_URL + "assets/";
+const api = "http://localhost:5066/api/assets/";
 
 export const getAssetsByIdAPI = async (portfolioId: number): Promise<AssetGet[]> => {
   try {
