@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "6g2w2jTSQGIeDGSQezpkMHUCI+702r7sBe+4IL7MKa46uyYngXJFQYfjw+e+MyU3j0O944+o96pV0eM+2GjClw==",
+  "dgSpecHash": "9vGRbTPnCuXHUPoGMi2fz+6nGnlh+RvFRxU9DEJpFWKx1UQYXuuX/tlpIy2fIz3cKUWzuIE+q5izN8Ka1nmF4Q==",
   "success": true,
   "projectFilePath": "C:\\GitClones\\WalletHub\\api\\api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dan\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\Dan\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\Dan\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\Dan\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\hangfire\\1.8.18\\hangfire.1.8.18.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\hangfire.aspnetcore\\1.8.18\\hangfire.aspnetcore.1.8.18.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\hangfire.core\\1.8.18\\hangfire.core.1.8.18.nupkg.sha512",

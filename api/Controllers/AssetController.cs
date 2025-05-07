@@ -1,6 +1,7 @@
 using api.Dtos.Currency;
 using api.Dtos.Portfolio;
 using api.Dtos.TransactionDtos;
+using api.Exceptions;
 using api.Extensions;
 using api.Interfaces;
 using api.Mappers;
@@ -31,29 +32,36 @@ namespace api.Controllers
         public async Task<IActionResult> GetAssets(int portfolioId)
         {
             var username = User.GetUsername();
-            if (string.IsNullOrEmpty(username)) return Unauthorized();
+            if (string.IsNullOrEmpty(username))
+                throw new UnauthorizedException("User is not authorized.");
 
             var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null) return Unauthorized();
+            if (appUser == null)
+                throw new UserNotFoundException("User not found.");
 
             var currencies = await _assetService.GetAllByPortfolioIdAsync(portfolioId);
             return Ok(currencies);
         }
 
+
         [HttpDelete("{symbol}")]
         public async Task<IActionResult> RemoveAsset(int portfolioId, string symbol)
         {
             var username = User.GetUsername();
-            if (string.IsNullOrEmpty(username)) return Unauthorized();
+            if (string.IsNullOrEmpty(username))
+                throw new UnauthorizedException("User is not authorized.");
 
             var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null) return Unauthorized();
+            if (appUser == null)
+                throw new UserNotFoundException("User not found.");
 
             var success = await _assetService.RemoveAssetAsync(portfolioId, symbol);
-            if (!success) return NotFound("Currency not found in portfolio");
+            if (!success)
+                throw new AssetNotFoundException("Currency not found in portfolio.");
 
             return NoContent();
         }
+
     }
 
 }

@@ -3,6 +3,7 @@ using api.Caching;
 using api.Data;
 using api.Extensions;
 using api.Interfaces;
+using api.Middlewares;
 using api.Models;
 using api.Repository;
 using api.Service;
@@ -47,9 +48,14 @@ builder.Services.AddServices();
 
 builder.Services.AddDecorators();
 
+
+builder.Services.AddFluentValidation();
+
 builder.Services.AddHangfire(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHangfireDashboard(); 
 

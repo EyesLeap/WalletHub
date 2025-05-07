@@ -4,6 +4,7 @@ import ModalCreatePortfolio from "../ModalCreatePortfolio/ModalCreatePortfolio";
 import './Sidebar.css'; 
 import { FaWallet } from "react-icons/fa"
 import SidebarSummary from "../SidebarSummary/SidebarSummary";
+import { toast } from "react-toastify";
 
 interface SidebarProps {
   onPortfolioClick: (id: number) => void; 
@@ -41,10 +42,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onPortfolioClick, activePortfolioId }
   const createPortfolio = async (portfolioName: string) => {
     try {
       const newPortfolio = await createPortfolioAPI(portfolioName);
-      setPortfolios([...portfolios, newPortfolio]);
-      closeModal(); 
+      if (newPortfolio) {  
+        setPortfolios([...portfolios, newPortfolio]);
+        closeModal();
+      } else {
+        
+        console.error("Portfolio was not created");
+      }
     } catch (error) {
-      console.error("Ошибка при создании портфолио:", error);
+      console.error("Error in creating portfolio", error);
     }
   };
 

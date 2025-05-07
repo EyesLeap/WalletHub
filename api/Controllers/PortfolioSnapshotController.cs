@@ -1,6 +1,7 @@
 using api.Dtos.Currency;
 using api.Dtos.Portfolio;
 using api.Dtos.TransactionDtos;
+using api.Exceptions;
 using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
@@ -32,11 +33,9 @@ namespace api.Controllers
         public async Task<IActionResult> CreateSnapshot([FromBody] int portfolioId)
         {
             var portfolio = await _portfolioService.GetPortfolioById(portfolioId);
-            if (portfolio == null)
-            {
-                return NotFound("Portfolio not found");
-            }
-
+            if (portfolio == null)          
+                throw new PortfolioNotFoundException(portfolioId);
+            
             var portfolioTotalValue = await _portfolioService.GetPortfolioTotalValue(portfolioId);
             var snapshot = await _portfolioSnapshotService.CreateSnapshotAsync(portfolioId, portfolioTotalValue);
 

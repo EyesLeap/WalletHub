@@ -7,6 +7,7 @@ using api.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using api.Exceptions;
 
 namespace api.Controllers
 {
@@ -27,10 +28,9 @@ namespace api.Controllers
         public async Task<IActionResult> GetPopularCurrencies([FromQuery] int limit = 10)
         {
             var currencies = await _cmpService.GetPopularCurrenciesAsync(limit);
-            if (currencies == null || !currencies.Any())
-            {
-                return NotFound("No popular currencies found.");
-            }
+            if (currencies == null || !currencies.Any())     
+                throw new NotFoundException("No popular currencies found.");
+            
             return Ok(currencies);
         }
 

@@ -1,6 +1,7 @@
 using api.Dtos.Currency;
 using api.Dtos.Portfolio;
 using api.Dtos.TransactionDtos;
+using api.Exceptions;
 using api.Extensions;
 using api.Interfaces;
 using api.Mappers;
@@ -46,21 +47,25 @@ namespace api.Controllers
             var transaction = await _transactionService.CreateTransactionAsync(portfolioId, dto);
 
             if (transaction == null)
-                return BadRequest("Transaction could not be processed");
+                throw new TransactionProcessingException("Transaction could not be processed");
 
             return CreatedAtAction(nameof(GetTransactionById), new { portfolioId = portfolioId, transactionId = transaction.Id }, transaction.ToTransactionDto());
 
         }
+
         [HttpGet("{portfolioId:int}/{transactionId:int}")]
         [Authorize]
         public async Task<IActionResult> GetTransactionById(int portfolioId, int transactionId)
         {
             var transaction = await _transactionService.GetTransactionByIdAsync(transactionId);
 
-            if (transaction == null) return NotFound("Transaction not found");
+            if (transaction == null)
+                throw new TransactionNotFoundException("Transaction not found");
 
             return Ok(transaction.ToTransactionDto());
         }
+
+
         [HttpGet("{portfolioId:int}")]
         [Authorize]
         public async Task<IActionResult> GetAllPortfolioTransactions(int portfolioId, 
@@ -76,17 +81,14 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteTransaction([FromRoute] int transactionId)
         {
-            if (transactionId <= 0)
-            {
-                return BadRequest("Invalid transaction ID.");
-            }
+            var transaction = await _transactionService.DeleteAsync(transactionId);
 
-            var transactionoModel = await _transactionService.DeleteAsync(transactionId);
+            if (transaction == null)
+                throw new TransactionNotFoundException("Transaction does not exist");
 
-            if (transactionoModel == null) return NotFound("Transaction does not exist");
-            
             return NoContent();
         }
+
         
     }
 }

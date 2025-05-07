@@ -1,4 +1,5 @@
 using api.Data;
+using api.Exceptions;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -56,19 +57,32 @@ namespace api.Repository
         }   
 
 
-        public async Task<Portfolio> GetPortfolioById(int portfolioId)
+        public async Task<Portfolio> GetById(int portfolioId)
         {
             var portfolioModel = await _context.Portfolios
                 .Include(p => p.Assets) 
                 .Include(p => p.Transactions)  
                 .FirstOrDefaultAsync(p => p.Id == portfolioId);
 
-            if (portfolioModel == null) return null;
+            if (portfolioModel == null)
+            {
+                throw new NotFoundException($"Portfolio with ID {portfolioId} not found.");
+            }
 
             return portfolioModel;
         }
 
-        public async Task<Portfolio> UpdateNameAsync(AppUser appUser, int portfolioId, string newPortfolioName)
+    public async Task<Portfolio?> GetByNameAsync(string userId, string portfolioName)
+    {
+       var portfolioModel = await _context.Portfolios
+                .Include(p => p.Assets) 
+                .Include(p => p.Transactions)  
+                .FirstOrDefaultAsync(p => p.Name == portfolioName && p.AppUserId == userId);
+
+            return portfolioModel;
+    }
+
+    public async Task<Portfolio> UpdateNameAsync(AppUser appUser, int portfolioId, string newPortfolioName)
         {
             var portfolioModel = await _context.Portfolios
                 .FirstOrDefaultAsync(p => p.AppUserId == appUser.Id && 

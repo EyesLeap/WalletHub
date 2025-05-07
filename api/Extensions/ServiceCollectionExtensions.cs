@@ -6,6 +6,9 @@ using api.Interfaces;
 using api.Models;
 using api.Repository;
 using api.Service;
+using api.Validators.Portfolio;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -154,6 +157,15 @@ namespace api.Extensions
             });
 
             return services;
+        }
+
+        public static IServiceCollection AddFluentValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssemblyContaining<CreatePortfolioDtoValidator>(); //Registers all validators from the assembly
+
+            return services;
+
         }
 
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)

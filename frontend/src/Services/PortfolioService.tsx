@@ -2,6 +2,7 @@
 import axios from "axios";
 import { PortfolioPost, PortfolioGet, PortfolioTotalValueGet, PortfolioDailyChangeGet } from "../Models/Portfolio";
 import { AssetTableValueGet } from "../Models/Asset";
+import { toast } from "react-toastify";
 
 const api = "http://localhost:5066/api/portfolios/";
 
@@ -38,19 +39,27 @@ export const getAllPortfoliosAPI = async () => {
 export const createPortfolioAPI = async (name: string) => {
   try {
     const response = await axios.post(api, { name });
-    return response.data; 
-  } catch (error) {
-    console.error("Error in creating a portfolio:", error);
-    throw error;
+    toast.success(`Portfolio "${name}" created successfully!`); 
+    return response.data;
+  } catch (error) { 
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 409) {
+        toast.error("Portfolio with this name already exists."); 
+      } else {
+        toast.error("Something went wrong. Please try again.");   
+      }
+    }
+    return null;
   }
 };
+
 
 export const updatePortfolioNameAPI = async (portfolioId: number, newPortfolioName: string) => {
   try {
     const response = await axios.patch(`${api}${portfolioId}`, { Name: newPortfolioName  });
     return response.data;  
   } catch (error) {
-    console.error("Error in updating a portfolio:", error);
+    toast.error("Error in updating a portfolio:");
     throw error;
   }
 };

@@ -5,7 +5,8 @@ namespace api.Interfaces
 {
     public interface IPortfolioRepository
     {
-       Task<Portfolio> GetPortfolioById(int portfolioId);
+       Task<Portfolio> GetById(int portfolioId);
+       Task<Portfolio?> GetByNameAsync(string userId, string portfolioName);
        Task<List<Portfolio>> GetAllUserPortfolios(string userId);
        Task<List<Portfolio>> GetAllPortfoliosAsync();
        Task<Portfolio> AddAsync(Portfolio portfolio);

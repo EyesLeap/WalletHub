@@ -3,6 +3,7 @@ using api.Dtos.AssetDtos;
 using api.Dtos.Currency;
 using api.Dtos.Portfolio;
 using api.Dtos.TransactionDtos;
+using api.Exceptions;
 using api.Extensions;
 using api.Interfaces;
 using api.Mappers;
@@ -43,14 +44,17 @@ namespace api.Controllers
         public async Task<IActionResult> GetAllUserPortfolios()
         {
             var username = User.GetUsername();
-            if (string.IsNullOrEmpty(username)) return Unauthorized();
+            if (string.IsNullOrEmpty(username)) 
+                throw new UnauthorizedException();
 
             var appUser = await _userManager.FindByNameAsync(username);     
-            if (appUser == null) return Unauthorized();
+            if (appUser == null) 
+                 throw new UserNotFoundException(User.GetUsername());
 
             var portfolioDtos = await _portfolioService.GetAllUserPortfolios(appUser.Id);
-            if (portfolioDtos == null) return NotFound();
-            
+            if (portfolioDtos == null) 
+                throw new NotFoundException($"Portfolios for {appUser.Id} were not found");
+                
             return Ok(portfolioDtos);      
         }
 
@@ -58,46 +62,45 @@ namespace api.Controllers
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int portfolioId)
         {
-            var username = User.GetUsername();
-            if (string.IsNullOrEmpty(username)) return Unauthorized();
-
-            var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null) return Unauthorized();
+            var appUser = await _userManager.FindByNameAsync(User.GetUsername());
+            if (appUser == null)     
+                throw new UserNotFoundException(User.GetUsername());
+            
 
             var portfolio = await _portfolioService.GetPortfolioById(portfolioId);
-            if (portfolio == null) return NotFound();
+            if (portfolio == null)           
+                throw new PortfolioNotFoundException(portfolioId);            
 
-            return Ok(portfolio.ToPortfolioDto());      
+            return Ok(portfolio.ToPortfolioDto());
         }
+
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreatePortfolio([FromBody] CreatePortfolioDto createPortfolioDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var username = User.GetUsername();
-            var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null) return Unauthorized();
+            var appUser = await _userManager.FindByNameAsync(User.GetUsername());
+            if (appUser == null)
+                throw new UserNotFoundException(User.GetUsername());
 
             var portfolioDto = await _portfolioService.CreatePortfolio(appUser, createPortfolioDto);
 
             return CreatedAtAction(nameof(GetById), new { portfolioId = portfolioDto.Id }, portfolioDto);
         }
 
+
         [HttpGet("{portfolioId:int}/total-value")]
         [Authorize]
         public async Task<IActionResult> GetPortfolioTotalValue(int portfolioId)
         {
             var portfolioValue = await _portfolioService.GetPortfolioTotalValue(portfolioId);
+            
             if (portfolioValue == null)
-            {
-                return NotFound("Portfolio not found");
-            }
+                throw new PortfolioNotFoundException(portfolioId);
 
             return Ok(portfolioValue);
         }
+
 
         [HttpGet("{portfolioId:int}/daily-change")]
         [Authorize]
@@ -105,9 +108,7 @@ namespace api.Controllers
         {
             var portfolioDailyChange = await _portfolioService.GetPortfolioDailyChange(portfolioId);
             if (portfolioDailyChange == null)
-            {
-                return NotFound("No daily change or portfolio does not exist");
-            }
+                throw new PortfolioNotFoundException(portfolioId);
 
             return Ok(portfolioDailyChange);
         }
@@ -121,32 +122,38 @@ namespace api.Controllers
 
             var username = User.GetUsername();
             var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null) return Unauthorized();
+            if (appUser == null)
+                 throw new UserNotFoundException(User.GetUsername());
 
             var portfolioModel = await _portfolioService.DeleteAsync(appUser, portfolioId);
 
-            if (portfolioModel == null) return NotFound("Portfolio does not exist");
+            if (portfolioModel == null) 
+                throw new PortfolioNotFoundException(portfolioId);
             
             return NoContent();
         }
 
         [HttpPatch("{portfolioId:int}")]
         [Authorize]
-        public async Task<IActionResult> UpdatePortfolioName([FromRoute] int portfolioId,[FromBody] EditPortfolioNameDto editedPortfolio)
+        public async Task<IActionResult> UpdatePortfolioName([FromRoute] int portfolioId, [FromBody] UpdatePortfolioNameDto editedPortfolio)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var username = User.GetUsername();
             var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null) return Unauthorized();
+            if (appUser == null) 
+                throw new UserNotFoundException(User.GetUsername());
 
             var portfolioModel = await _portfolioService.UpdateNameAsync(appUser, portfolioId, editedPortfolio.Name);
 
-            if (portfolioModel == null) return NotFound("Portfolio does not exist");
+            if (portfolioModel == null)      
+                throw new PortfolioNotFoundException(portfolioId);
             
+
             return Ok(portfolioModel);
-        }   
+}
+
 
        
     }

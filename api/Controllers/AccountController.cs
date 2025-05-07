@@ -1,5 +1,6 @@
 using api.Caching;
 using api.Dtos.Account;
+using api.Exceptions;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
@@ -32,11 +33,13 @@ namespace api.Controllers
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
 
-            if (user == null) return Unauthorized("Invalid username!");
+            if (user == null) 
+                throw new UnauthorizedException();
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if (!result.Succeeded) return Unauthorized("Username not found and/or password incorrect");
+            if (!result.Succeeded) 
+                throw new UnauthorizedException();
 
             return Ok(
                 new NewUserDto
@@ -64,12 +67,12 @@ namespace api.Controllers
 
                 var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
                 if (!createdUser.Succeeded)
-                    return StatusCode(500, createdUser.Errors);
+                    throw new UserNotFoundException(appUser.UserName);
 
                 var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
                 if (!roleResult.Succeeded)
-                    return StatusCode(500, roleResult.Errors);
-
+                    throw new WalletHubException("Failed to assign role");
+    
                 return Ok(
                     new NewUserDto
                     {

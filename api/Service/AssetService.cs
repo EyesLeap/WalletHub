@@ -22,7 +22,7 @@ namespace api.Service
 
     public async Task<IEnumerable<GetAssetDto>> GetAllByPortfolioIdAsync(int portfolioId)
     {
-        var portfolio = await _portfolioRepository.GetPortfolioById(portfolioId);
+        var portfolio = await _portfolioRepository.GetById(portfolioId);
         if (portfolio == null) return Enumerable.Empty<GetAssetDto>();
 
         return await _assetRepository.GetAllByPortfolioIdAsync(portfolioId);

@@ -37,7 +37,7 @@ namespace api.Service
 
         public async Task<Models.Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto)
         { 
-            var portfolio = await _portfolioRepository.GetPortfolioById(portfolioId);
+            var portfolio = await _portfolioRepository.GetById(portfolioId);
             if (portfolio == null)
                 return null;
 

@@ -9,6 +9,8 @@ using api.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using api.Exceptions;
+using System.Net;
 
 namespace api.Service
 {
@@ -36,24 +38,37 @@ namespace api.Service
 
         public async Task<List<Asset>> GetUserAssets(AppUser user, int portfolioId)
         {
-            var portfolio = await _portfolioRepository.GetPortfolioById(portfolioId);
-
-            if (portfolio == null)
-                throw new Exception($"Portfolio with ID {portfolioId} not found for user {user.Id}");
+            var portfolio = await _portfolioRepository.GetById(portfolioId);
 
             return portfolio.Assets.ToList();
         }
 
         public async Task<PortfolioDto> CreatePortfolio(AppUser user, CreatePortfolioDto dto)
         {
+            var existingPortfolio = await _portfolioRepository.GetByNameAsync(user.Id, dto.Name);
+            if (existingPortfolio != null)  
+            {
+                throw new PortfolioAlreadyExistsException(dto.Name);
+            }
+
             var portfolio = dto.ToPortfolioFromCreateDto(user.Id);
-            await _portfolioRepository.AddAsync(portfolio);
+
+            try
+            {
+                await _portfolioRepository.AddAsync(portfolio);
+            }
+            catch (Exception ex)
+            {
+                throw new WalletHubException("Failed to save the portfolio to the database.", HttpStatusCode.InternalServerError);
+            }
+
             return portfolio.ToPortfolioDto();
         }
 
+
         public async Task<Portfolio> GetPortfolioById(int portfolioId)
         {
-            return await _portfolioRepository.GetPortfolioById(portfolioId);
+            return await _portfolioRepository.GetById(portfolioId);
         }
         
         public async Task<PortfolioTotalValue> GetPortfolioTotalValue(int portfolioId)
