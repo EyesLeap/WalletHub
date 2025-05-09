@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{18B63F15-295A-4F13-B50B-6441C2E60A17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\WalletHub.API.csproj", "{18B63F15-295A-4F13-B50B-6441C2E60A17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.Tests", "WalletHub.Tests\WalletHub.Tests.csproj", "{AF76FB57-E220-4867-BDCF-1F05290C23E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{18B63F15-295A-4F13-B50B-6441C2E60A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18B63F15-295A-4F13-B50B-6441C2E60A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18B63F15-295A-4F13-B50B-6441C2E60A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF76FB57-E220-4867-BDCF-1F05290C23E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF76FB57-E220-4867-BDCF-1F05290C23E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF76FB57-E220-4867-BDCF-1F05290C23E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF76FB57-E220-4867-BDCF-1F05290C23E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "sq/1B6G1q3eW/itXqCXt29tbclHeRpMUunUBEuOBk7E=",
+  "Source": "WalletHub.API",
+  "BasePath": "_content/WalletHub.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
