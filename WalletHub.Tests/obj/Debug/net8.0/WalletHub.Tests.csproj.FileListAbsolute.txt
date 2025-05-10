@@ -189,3 +189,7 @@ C:\GitClones\WalletHub\WalletHub.Tests\obj\Debug\net8.0\refint\WalletHub.Tests.d
 C:\GitClones\WalletHub\WalletHub.Tests\obj\Debug\net8.0\WalletHub.Tests.pdb
 C:\GitClones\WalletHub\WalletHub.Tests\obj\Debug\net8.0\WalletHub.Tests.genruntimeconfig.cache
 C:\GitClones\WalletHub\WalletHub.Tests\obj\Debug\net8.0\ref\WalletHub.Tests.dll
+C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
+C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Moq.EntityFrameworkCore.dll

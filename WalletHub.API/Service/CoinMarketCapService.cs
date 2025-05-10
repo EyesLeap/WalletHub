@@ -92,7 +92,7 @@ namespace WalletHub.API.Service
 
         
 
-        private async Task<T?> ExecuteApiRequestAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null)
+        public async Task<T?> ExecuteApiRequestAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null)
         {
             try
             {

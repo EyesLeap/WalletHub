@@ -1,4 +1,3 @@
-using System.Transactions;
 using WalletHub.API.Dtos.Currency;
 using WalletHub.API.Dtos.Portfolio;
 using WalletHub.API.Dtos.TransactionDtos;
@@ -9,6 +8,7 @@ using WalletHub.API.Models;
 using WalletHub.API.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.EntityFrameworkCore;
 
 namespace WalletHub.API.Service
 {
@@ -35,7 +35,7 @@ namespace WalletHub.API.Service
 
 
 
-        public async Task<Models.Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto)
+        public async Task<Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto)
         { 
             var portfolio = await _portfolioRepository.GetById(portfolioId);
             if (portfolio == null)
@@ -93,9 +93,9 @@ namespace WalletHub.API.Service
             return true;
         }
 
-        private Models.Transaction CreateTransactionEntity(int portfolioId, int assetId, CreateTransactionDto dto)
+        private Transaction CreateTransactionEntity(int portfolioId, int assetId, CreateTransactionDto dto)
         {
-            return new Models.Transaction
+            return new Transaction
             {
                 PortfolioId = portfolioId,
                 AssetId = assetId,
@@ -131,12 +131,12 @@ namespace WalletHub.API.Service
 
 
 
-        public Task<Models.Transaction> GetTransactionByIdAsync(int transactionId)
+        public async Task<Transaction> GetTransactionByIdAsync(int transactionId)
         {
-            return _transactionRepository.GetByIdAsync(transactionId);
+            return await _transactionRepository.GetByIdAsync(transactionId);
         } 
 
-        public async Task<Models.Transaction?> DeleteAsync(int transactionId)
+        public async Task<Transaction?> DeleteAsync(int transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);
             if (transaction == null) return null;
@@ -167,28 +167,29 @@ namespace WalletHub.API.Service
             return await _transactionRepository.DeleteAsync(transactionId);
         }
 
-    public async Task<PagedList<TransactionDto>> GetAllTransactionsAsync(int portfolioId, TransactionQueryDto queryDto)
-    {
-        var query = _transactionRepository.GetAllByPortfolioId(portfolioId);
-
-        if (queryDto.TransactionType.HasValue)
+        public async Task<PagedList<TransactionDto>> GetAllTransactionsAsync(int portfolioId, TransactionQueryDto queryDto)
         {
-            query = query.Where(t => t.TransactionType == queryDto.TransactionType);
+            var query = _transactionRepository.GetAllByPortfolioId(portfolioId);
+
+            if (queryDto.TransactionType.HasValue)
+            {
+                query = query.Where(t => t.TransactionType == queryDto.TransactionType);
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryDto.AssetSymbol))
+            {
+                query = query.Where(t => t.Asset.Symbol.Contains(queryDto.AssetSymbol));
+            }
+
+            query = queryDto.SortDescending 
+                ? query.OrderByDescending(t => t.CreatedAt) 
+                : query.OrderBy(t => t.CreatedAt);
+
+            var projectedQuery = query.Select(t => t.ToTransactionDto());
+
+
+            return await PagedList<TransactionDto>.CreateAsync(projectedQuery, queryDto.Page, queryDto.PageSize);
         }
-
-        if (!string.IsNullOrWhiteSpace(queryDto.AssetSymbol))
-        {
-            query = query.Where(t => t.Asset.Symbol.Contains(queryDto.AssetSymbol));
-        }
-
-        query = queryDto.SortDescending 
-            ? query.OrderByDescending(t => t.CreatedAt) 
-            : query.OrderBy(t => t.CreatedAt);
-
-        var projectedQuery = query.Select(t => t.ToTransactionDto());
-
-        return await PagedList<TransactionDto>.CreateAsync(projectedQuery, queryDto.Page, queryDto.PageSize);
-    }
 
 
 

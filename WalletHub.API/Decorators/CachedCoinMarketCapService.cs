@@ -40,6 +40,10 @@ namespace WalletHub.API.Caching
         {
             return await _inner.GetPopularCurrenciesAsync(limit);
         }
+        public async Task<T?> ExecuteApiRequestAsync<T>(string endpoint, Dictionary<string, string>? queryParams = null)
+        {
+            return await _inner.ExecuteApiRequestAsync<T>(endpoint, queryParams);
+        }
     }
 
 }
