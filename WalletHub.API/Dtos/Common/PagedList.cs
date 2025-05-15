@@ -3,7 +3,7 @@ using System.Transactions;
 using WalletHub.API.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace WalletHub.API.Dtos.TransactionDtos
+namespace WalletHub.API.Dtos.Common
 {
     public class PagedList<T> : List<T>
     {

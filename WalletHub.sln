@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.Tests", "WalletHu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.API", "WalletHub.API\WalletHub.API.csproj", "{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.ExportService", "WalletHub.ExportService\WalletHub.ExportService.csproj", "{36DF7A6A-B62B-410E-A773-7C70C3255224}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

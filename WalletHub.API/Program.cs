@@ -45,6 +45,14 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
+//builder.Services.AddHttpClient();
+
+builder.Services.AddHttpClient<ExportDataService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5018/");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
 
 builder.Services.AddDecorators();
 

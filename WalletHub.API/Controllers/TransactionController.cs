@@ -10,6 +10,9 @@ using WalletHub.API.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Text;
+using WalletHub.API.Dtos.Export;
 
 namespace WalletHub.API.Controllers
 {
@@ -19,6 +22,7 @@ namespace WalletHub.API.Controllers
     {
         
         private readonly UserManager<AppUser> _userManager;
+        private readonly ExportDataService _exportDataService;
         private readonly IPortfolioService _portfolioService;
         private readonly ITransactionService _transactionService;
         private readonly ICoinMarketCapService _fmpService;
@@ -26,13 +30,14 @@ namespace WalletHub.API.Controllers
         public TransactionController(UserManager<AppUser> userManager,
         ICoinMarketCapService fmpService,
         IPortfolioService portfolioService,
-        ITransactionService transactionService)
+        ITransactionService transactionService,
+        ExportDataService exportDataService)
         {
             _userManager = userManager;
-          
             _fmpService = fmpService;
             _portfolioService = portfolioService;       
             _transactionService = transactionService;
+            _exportDataService = exportDataService;
         }
 
 
@@ -53,6 +58,28 @@ namespace WalletHub.API.Controllers
 
         }
 
+        [HttpPost("{portfolioId:int}/export")]
+        [Authorize]
+        public async Task<IActionResult> ExportTransactions(
+            [FromBody] ExportRequestDto requestDto)
+        {
+            var userName = User.GetUsername();
+            if (string.IsNullOrEmpty(userName))
+                throw new UnauthorizedException();
+
+            var fileBytes = await _exportDataService.ExportTransactionsAsync(requestDto);
+
+            var contentType = requestDto.Format.ToString().ToLower() switch
+            {
+                "pdf" => "application/pdf",
+                "csv" => "text/csv",
+                _ => "application/octet-stream"
+            };
+
+            return File(fileBytes, contentType, $"transactions.{requestDto.Format.ToString().ToLower()}");
+        }
+
+
         [HttpGet("{portfolioId:int}/{transactionId:int}")]
         [Authorize]
         public async Task<IActionResult> GetTransactionById(int portfolioId, int transactionId)
@@ -72,9 +99,10 @@ namespace WalletHub.API.Controllers
             [FromQuery] TransactionQueryDto queryDto)
         {
             var transactions = await _transactionService.GetAllTransactionsAsync(portfolioId, queryDto);
-
+            
             return Ok(transactions);
         }
+
 
 
         [HttpDelete("{transactionId:int}")]

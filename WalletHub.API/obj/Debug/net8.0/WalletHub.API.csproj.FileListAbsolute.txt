@@ -255,7 +255,3 @@ C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\refint\WalletHub.API.dll
 C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\WalletHub.API.pdb
 C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\WalletHub.API.genruntimeconfig.cache
 C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\ref\WalletHub.API.dll
-C:\GitClones\WalletHub\WalletHub.API\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
-C:\GitClones\WalletHub\WalletHub.API\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
-C:\GitClones\WalletHub\WalletHub.API\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
-C:\GitClones\WalletHub\WalletHub.API\bin\Debug\net8.0\Moq.EntityFrameworkCore.dll

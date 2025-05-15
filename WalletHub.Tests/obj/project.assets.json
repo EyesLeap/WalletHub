@@ -1971,7 +1971,6 @@
           "Microsoft.Extensions.Identity.Core": "8.0.0",
           "Microsoft.NET.Test.Sdk": "17.13.0",
           "Moq": "4.20.72",
-          "Moq.EntityFrameworkCore": "9.0.0.5",
           "Newtonsoft.Json": "13.0.3",
           "Scrutor": "6.0.1",
           "StackExchange.Redis": "2.8.31",

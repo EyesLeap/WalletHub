@@ -1,8 +1,7 @@
-using WalletHub.API.Dtos.Currency;
-using WalletHub.API.Dtos.Portfolio;
 using WalletHub.API.Dtos.TransactionDtos;
 using WalletHub.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using WalletHub.API.Dtos.Common;
 
 namespace WalletHub.API.Interfaces
 {
