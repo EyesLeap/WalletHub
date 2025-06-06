@@ -6,6 +6,7 @@ import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardPage from "../Pages/DashboardPage/DashboardPage";
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage"; 
+import CryptocurrenciesPage from "../Pages/CryptocurrenciesPage/CryptocurrenciesPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -19,6 +20,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <DashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cryptocurrencies",
+        element: (
+          <ProtectedRoute>
+            <CryptocurrenciesPage />
           </ProtectedRoute>
         ),
       },

@@ -15,12 +15,10 @@ namespace WalletHub.API.Controllers
     [ApiController]
     public class MarketCurrencyController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
         private readonly ICoinMarketCapService _cmpService;
-        public MarketCurrencyController(ApplicationDBContext context,
-         ICoinMarketCapService cmpService)
+        public MarketCurrencyController(
+            ICoinMarketCapService cmpService)
         {
-            _context = context;
             _cmpService = cmpService;
         }
 

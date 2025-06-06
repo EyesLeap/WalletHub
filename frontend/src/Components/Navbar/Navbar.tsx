@@ -27,7 +27,7 @@ const Navbar = (props: Props) => {
             </Link>
           </div>
           <div className="hidden font-bold lg:flex">
-            <Link to="/dashboard" className="navbar-link">
+            <Link to="/cryptocurrencies" className="navbar-link">
               Cryptocurrencies
             </Link>
           </div>
