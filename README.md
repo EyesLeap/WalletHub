@@ -54,7 +54,7 @@ The application is built using a variety of powerful technologies:
 - Secure data storage.
 
 ### 6. ⏱️ **Background Tasks**
-- Use **Hangfire** for background tasks like refreshing portfolio values.
+- Use **Hangfire** for background tasks like creating portfolio snapshots and saving them to the database to track portfolio value history.
 
 ---
 
