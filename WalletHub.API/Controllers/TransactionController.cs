@@ -44,12 +44,12 @@ namespace WalletHub.API.Controllers
         
         [HttpPost("{portfolioId:int}")]
         [Authorize]
-        public async Task<IActionResult> CreateTransaction(int portfolioId, [FromBody] CreateTransactionDto dto)
+        public async Task<IActionResult> CreateTransaction(int portfolioId, [FromBody] CreateTransactionDto dto, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var transaction = await _transactionService.CreateTransactionAsync(portfolioId, dto);
+            var transaction = await _transactionService.CreateTransactionAsync(portfolioId, dto, cancellationToken);
 
             if (transaction == null)
                 throw new TransactionProcessingException("Transaction could not be processed");

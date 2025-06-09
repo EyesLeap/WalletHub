@@ -31,9 +31,9 @@ namespace WalletHub.API.Service
             _cmpService = cmpService;
             _cache = cache;
         }
-        public async Task<Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto)
+        public async Task<Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto, CancellationToken cancellationToken)
         { 
-            var portfolio = await _portfolioRepository.GetById(portfolioId);
+            var portfolio = await _portfolioRepository.GetById(portfolioId, cancellationToken);
             if (portfolio == null)
                 throw new PortfolioNotFoundException(portfolioId);
 

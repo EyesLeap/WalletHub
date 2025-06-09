@@ -17,14 +17,14 @@ namespace WalletHub.API.Caching
             _cache = cache;
         }
 
-        public async Task<List<Asset>> GetUserAssets(AppUser user, int portfolioId)
+        public async Task<List<Asset>> GetUserAssets(AppUser user, int portfolioId, CancellationToken cancellationToken)
         {
-            return await _portfolioService.GetUserAssets(user, portfolioId);
+            return await _portfolioService.GetUserAssets(user, portfolioId, cancellationToken);
         }
 
-        public async Task<PortfolioDto> CreatePortfolio(AppUser user, CreatePortfolioDto dto)
+        public async Task<PortfolioDto> CreatePortfolio(AppUser user, CreatePortfolioDto dto, CancellationToken cancellationToken)
         {
-            var portfolio = await _portfolioService.CreatePortfolio(user, dto);
+            var portfolio = await _portfolioService.CreatePortfolio(user, dto, cancellationToken);
 
             var cacheKey = $"User_{user.Id}_Portfolios";
 
@@ -45,12 +45,12 @@ namespace WalletHub.API.Caching
         }
 
 
-        public async Task<Portfolio> GetPortfolioById(int portfolioId)
+        public async Task<PortfolioDto> GetPortfolioById(int portfolioId, CancellationToken cancellationToken)
         {
-            return await _portfolioService.GetPortfolioById(portfolioId);
+            return await _portfolioService.GetPortfolioById(portfolioId, cancellationToken);
         }
 
-        public async Task<PortfolioTotalValue> GetPortfolioTotalValue(int portfolioId)
+        public async Task<PortfolioTotalValue> GetPortfolioTotalValue(int portfolioId, CancellationToken cancellationToken)
         {
             var cacheKey = $"Portfolio_{portfolioId}_PortfolioTotalValue"; 
             var cachedValues = await _cache.GetAsync<PortfolioTotalValue>(cacheKey);
@@ -60,14 +60,14 @@ namespace WalletHub.API.Caching
                 return cachedValues;
             }
 
-            var portfolioValue = await _portfolioService.GetPortfolioTotalValue(portfolioId);
+            var portfolioValue = await _portfolioService.GetPortfolioTotalValue(portfolioId, cancellationToken);
 
             await _cache.SetAsync(cacheKey, portfolioValue, TimeSpan.FromMinutes(5));
 
             return portfolioValue;
         }
 
-        public async Task<PortfolioDailyChange> GetPortfolioDailyChange(int portfolioId)
+        public async Task<PortfolioDailyChange> GetPortfolioDailyChange(int portfolioId, CancellationToken cancellationToken)
         {  
             var cacheKey = $"Portfolio_{portfolioId}_PortfolioDailyChange";
             var cachedChange = await _cache.GetAsync<PortfolioDailyChange>(cacheKey);
@@ -77,7 +77,7 @@ namespace WalletHub.API.Caching
                 return cachedChange;
             }
 
-            var dailyChange = await _portfolioService.GetPortfolioDailyChange(portfolioId);
+            var dailyChange = await _portfolioService.GetPortfolioDailyChange(portfolioId, cancellationToken);
 
             await _cache.SetAsync(cacheKey, dailyChange, TimeSpan.FromMinutes(5));
 
@@ -86,10 +86,10 @@ namespace WalletHub.API.Caching
             
         }
 
-        public async Task<Portfolio> DeleteAsync(AppUser user, int portfolioId)
+        public async Task<PortfolioDto> DeleteAsync(AppUser user, int portfolioId, CancellationToken cancellationToken)
         {
             
-            var portfolio = await _portfolioService.DeleteAsync(user, portfolioId);
+            var portfolio = await _portfolioService.DeleteAsync(user, portfolioId, cancellationToken);
 
             var portfolioCacheKey = $"Portfolio_{portfolioId}_PortfolioTotalValue";
             await _cache.RemoveAsync(portfolioCacheKey);
@@ -111,7 +111,7 @@ namespace WalletHub.API.Caching
             return portfolio;
         }
 
-        public async Task<List<PortfolioDto>> GetAllUserPortfolios(string userId)
+        public async Task<List<PortfolioDto>> GetAllUserPortfolios(string userId, CancellationToken cancellationToken)
         {
             var cacheKey = $"User_{userId}_Portfolios";
             var cachedData = await _cache.GetAsync<List<PortfolioDto>>(cacheKey);
@@ -121,16 +121,16 @@ namespace WalletHub.API.Caching
                 return cachedData;
             }
 
-            var portfolioDtos = await _portfolioService.GetAllUserPortfolios(userId);
+            var portfolioDtos = await _portfolioService.GetAllUserPortfolios(userId, cancellationToken);
 
             await _cache.SetAsync(cacheKey, portfolioDtos, TimeSpan.FromMinutes(5));
 
             return portfolioDtos;
         }
 
-        public async Task<PortfolioDto> UpdateNameAsync(AppUser user, int portfolioId, string newPortfolioName)
+        public async Task<PortfolioDto> UpdateNameAsync(AppUser user, int portfolioId, string newPortfolioName, CancellationToken cancellationToken)
         {
-            var updatedPortfolio = await _portfolioService.UpdateNameAsync(user, portfolioId, newPortfolioName);
+            var updatedPortfolio = await _portfolioService.UpdateNameAsync(user, portfolioId, newPortfolioName, cancellationToken);
 
             var cacheKey = $"User_{user.Id}_Portfolios";
             var cachedPortfolios = await _cache.GetAsync<List<PortfolioDto>>(cacheKey);
@@ -148,9 +148,9 @@ namespace WalletHub.API.Caching
             return updatedPortfolio;
         }
 
-        public Task<List<Portfolio>> GetAllPortfoliosAsync()
+        public Task<List<PortfolioDto>> GetAllPortfoliosAsync(CancellationToken cancellationToken)
         {
-            var portfolios = _portfolioService.GetAllPortfoliosAsync();
+            var portfolios = _portfolioService.GetAllPortfoliosAsync(cancellationToken);
             return portfolios;
         }
     }

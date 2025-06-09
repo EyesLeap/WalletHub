@@ -7,7 +7,7 @@ namespace WalletHub.API.Interfaces
 {
     public interface ITransactionService
     {
-        Task<Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto);
+        Task<Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto, CancellationToken cancellationToken);
         Task<Transaction> GetTransactionByIdAsync(int transactionId);
         Task<PagedList<TransactionDto>> GetAllTransactionsAsync(int portfolioId, TransactionQueryDto queryDto);
         Task<Transaction?> DeleteAsync(int transactionId);

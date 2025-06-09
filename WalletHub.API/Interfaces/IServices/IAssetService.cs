@@ -8,7 +8,7 @@ namespace WalletHub.API.Interfaces
 {
     public interface IAssetService
     {
-        Task<IEnumerable<GetAssetDto>> GetAllByPortfolioIdAsync(int portfolioId);
+        Task<IEnumerable<GetAssetDto>> GetAllByPortfolioIdAsync(int portfolioId, CancellationToken cancellationToken);
         Task<bool> RemoveAssetAsync(int portfolioId, string symbol);
 
     }

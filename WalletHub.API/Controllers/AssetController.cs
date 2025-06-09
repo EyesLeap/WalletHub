@@ -29,7 +29,7 @@ namespace WalletHub.API.Controllers
 
         
         [HttpGet]
-        public async Task<IActionResult> GetAssets(int portfolioId)
+        public async Task<IActionResult> GetAssets(int portfolioId, CancellationToken cancellationToken)
         {
             var username = User.GetUsername();
             if (string.IsNullOrEmpty(username))
@@ -39,7 +39,7 @@ namespace WalletHub.API.Controllers
             if (appUser == null)
                 throw new UserNotFoundException("User not found.");
 
-            var currencies = await _assetService.GetAllByPortfolioIdAsync(portfolioId);
+            var currencies = await _assetService.GetAllByPortfolioIdAsync(portfolioId, cancellationToken);
             return Ok(currencies);
         }
 

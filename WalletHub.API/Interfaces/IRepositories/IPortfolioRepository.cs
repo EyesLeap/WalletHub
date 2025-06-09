@@ -5,13 +5,13 @@ namespace WalletHub.API.Interfaces
 {
     public interface IPortfolioRepository
     {
-       Task<Portfolio> GetById(int portfolioId);
-       Task<Portfolio?> GetByNameAsync(string userId, string portfolioName);
-       Task<List<Portfolio>> GetAllUserPortfolios(string userId);
-       Task<List<Portfolio>> GetAllPortfoliosAsync();
-       Task<Portfolio> AddAsync(Portfolio portfolio);
-       Task<Portfolio> DeleteAsync(AppUser appUser, int portfolioId);
-       Task<Portfolio> UpdateNameAsync(AppUser appUser, int portfolioId, string newPortfolioName);
-        
+        Task<Portfolio?> GetById(int portfolioId, CancellationToken cancellationToken);
+        Task<Portfolio?> GetByNameAsync(string userId, string portfolioName, CancellationToken cancellationToken);
+        Task<List<Portfolio>> GetAllUserPortfolios(string userId, CancellationToken cancellationToken);
+        Task<List<Portfolio>> GetAllPortfoliosAsync(CancellationToken cancellationToken);
+        Task<Portfolio> AddAsync(Portfolio portfolio, CancellationToken cancellationToken);
+        Task<Portfolio?> DeleteAsync(AppUser appUser, int portfolioId, CancellationToken cancellationToken);
+        Task<Portfolio?> UpdateNameAsync(AppUser appUser, int portfolioId, string newPortfolioName, CancellationToken cancellationToken);
     }
+
 }

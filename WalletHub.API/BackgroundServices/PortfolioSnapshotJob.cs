@@ -14,11 +14,11 @@ namespace WalletHub.API.BackgroundServices
             _scopeFactory = scopeFactory;
         }
 
-        public async Task CreateSnapshotsAsync()
+        public async Task CreateSnapshotsAsync(CancellationToken cancellationToken = default)
         {
             using var scope = _scopeFactory.CreateScope();
             var portfolioService = scope.ServiceProvider.GetRequiredService<IPortfolioService>();
-            var portfolios = await portfolioService.GetAllPortfoliosAsync();
+            var portfolios = await portfolioService.GetAllPortfoliosAsync(cancellationToken);
 
             foreach (var portfolio in portfolios)
             {
@@ -26,7 +26,7 @@ namespace WalletHub.API.BackgroundServices
                 var innerPortfolioService = innerScope.ServiceProvider.GetRequiredService<IPortfolioService>();
                 var snapshotService = innerScope.ServiceProvider.GetRequiredService<IPortfolioSnapshotService>();
 
-                var totalValue = await innerPortfolioService.GetPortfolioTotalValue(portfolio.Id);
+                var totalValue = await innerPortfolioService.GetPortfolioTotalValue(portfolio.Id, cancellationToken);
                 await snapshotService.CreateSnapshotAsync(portfolio.Id, totalValue);
             }
         }

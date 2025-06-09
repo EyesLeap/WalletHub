@@ -68,7 +68,7 @@ namespace WalletHub.API.Extensions
 
             RecurringJob.AddOrUpdate<PortfolioSnapshotJob>(
                 "every-3-hours-snapshot",
-                job => job.CreateSnapshotsAsync(),
+                job => job.CreateSnapshotsAsync(CancellationToken.None),
                 "0 */3 * * *",
                 optionsUtc
             );

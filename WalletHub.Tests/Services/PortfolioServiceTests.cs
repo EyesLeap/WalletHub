@@ -31,7 +31,6 @@ namespace WalletHub.Tests.UnitTests
             _service = new PortfolioService(
                 _portfolioRepoMock.Object,
                 _snapshotServiceMock.Object,
-                null, 
                 _cmpServiceMock.Object,
                 _assetRepoMock.Object,
                 _cacheMock.Object
@@ -44,14 +43,16 @@ namespace WalletHub.Tests.UnitTests
            
             var user = new AppUser { Id = "user123" };
             var createDto = new CreatePortfolioDto { Name = "New Portfolio" };
+            var cancellationToken = CancellationToken.None;
 
             _portfolioRepoMock
-                .Setup(x => x.GetByNameAsync(user.Id, createDto.Name))
+                .Setup(x => x.GetByNameAsync(user.Id, createDto.Name, cancellationToken))
                 .ReturnsAsync((Portfolio?)null); 
 
             _portfolioRepoMock
-                .Setup(x => x.AddAsync(It.IsAny<Portfolio>()))
-                .ReturnsAsync((Portfolio p) => p);
+                .Setup(x => x.AddAsync(It.IsAny<Portfolio>(), cancellationToken))
+                .ReturnsAsync((Portfolio p, CancellationToken ct) => p);
+
 
             var expectedDto = new Portfolio
             {
@@ -60,12 +61,12 @@ namespace WalletHub.Tests.UnitTests
             }.ToPortfolioDto();
 
        
-            var result = await _service.CreatePortfolio(user, createDto);
+            var result = await _service.CreatePortfolio(user, createDto, cancellationToken);
 
             
             Assert.Equal(expectedDto.Name, result.Name);
             Assert.Equal(expectedDto.Id, result.Id);
-            _portfolioRepoMock.Verify(x => x.AddAsync(It.IsAny<Portfolio>()), Times.Once);
+            _portfolioRepoMock.Verify(x => x.AddAsync(It.IsAny<Portfolio>(), cancellationToken), Times.Once);
         }
 
         [Fact]
@@ -74,15 +75,16 @@ namespace WalletHub.Tests.UnitTests
             var user = new AppUser { Id = "user123" };
             var createDto = new CreatePortfolioDto { Name = "Existing" };
             var existingPortfolio = new Portfolio { Name = "Existing" };
+            var cancellationToken = CancellationToken.None;
 
             _portfolioRepoMock
-                .Setup(x => x.GetByNameAsync(user.Id, createDto.Name))
+                .Setup(x => x.GetByNameAsync(user.Id, createDto.Name, cancellationToken))
                 .ReturnsAsync(existingPortfolio);
 
             await Assert.ThrowsAsync<PortfolioAlreadyExistsException>(
-                () => _service.CreatePortfolio(user, createDto));
+                () => _service.CreatePortfolio(user, createDto, cancellationToken));
 
-            _portfolioRepoMock.Verify(x => x.AddAsync(It.IsAny<Portfolio>()), Times.Never);
+            _portfolioRepoMock.Verify(x => x.AddAsync(It.IsAny<Portfolio>(), cancellationToken), Times.Never);
         }
 
 
@@ -92,10 +94,11 @@ namespace WalletHub.Tests.UnitTests
         {
             int portfolioId = 1;
             var expectedPortfolio = new Portfolio { Id = portfolioId, Name = "My Portfolio" };
+            var cancellationToken = CancellationToken.None;
 
-            _portfolioRepoMock.Setup(x => x.GetById(portfolioId)).ReturnsAsync(expectedPortfolio);
+            _portfolioRepoMock.Setup(x => x.GetById(portfolioId, cancellationToken)).ReturnsAsync(expectedPortfolio);
 
-            var result = await _service.GetPortfolioById(portfolioId);
+            var result = await _service.GetPortfolioById(portfolioId, cancellationToken);
 
             Assert.NotNull(result); 
             Assert.Equal(portfolioId, result.Id);  

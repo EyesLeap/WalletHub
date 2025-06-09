@@ -24,7 +24,6 @@ namespace WalletHub.API.Service
 
         public PortfolioService(IPortfolioRepository portfolioRepository,
         IPortfolioSnapshotService snapshotService,
-        UserManager<AppUser> userManager,
         ICoinMarketCapService cmpService,
         IAssetRepository assetRepository,
         ICacheService cache)
@@ -36,45 +35,43 @@ namespace WalletHub.API.Service
             _snapshotService = snapshotService;
         }
 
-        public async Task<List<Asset>> GetUserAssets(AppUser user, int portfolioId)
+        public async Task<List<Asset>> GetUserAssets(AppUser user, int portfolioId, CancellationToken cancellationToken)
         {
-            var portfolio = await _portfolioRepository.GetById(portfolioId);
+            var portfolio = await _portfolioRepository.GetById(portfolioId, cancellationToken);
+            if (portfolio is null)
+                throw new PortfolioNotFoundException(portfolioId);
 
             return portfolio.Assets.ToList();
         }
 
-        public async Task<PortfolioDto> CreatePortfolio(AppUser user, CreatePortfolioDto dto)
+        public async Task<PortfolioDto> CreatePortfolio(AppUser user, CreatePortfolioDto dto, CancellationToken cancellationToken)
         {
-            var existingPortfolio = await _portfolioRepository.GetByNameAsync(user.Id, dto.Name);
-            if (existingPortfolio != null)  
-            {
+            var existingPortfolio = await _portfolioRepository.GetByNameAsync(user.Id, dto.Name, cancellationToken);
+            if (existingPortfolio is not null)             
                 throw new PortfolioAlreadyExistsException(dto.Name);
-            }
-
+            
             var portfolio = dto.ToPortfolioFromCreateDto(user.Id);
-
-            try
-            {
-                await _portfolioRepository.AddAsync(portfolio);
-            }
-            catch (Exception ex)
-            {
-                throw new WalletHubException("Failed to save the portfolio to the database.", HttpStatusCode.InternalServerError);
-            }
-
+        
+            await _portfolioRepository.AddAsync(portfolio, cancellationToken);
+ 
             return portfolio.ToPortfolioDto();
         }
 
 
-        public async Task<Portfolio> GetPortfolioById(int portfolioId)
+        public async Task<PortfolioDto> GetPortfolioById(int portfolioId, CancellationToken cancellationToken)
         {
-            return await _portfolioRepository.GetById(portfolioId);
+            var portfolio = await _portfolioRepository.GetById(portfolioId, cancellationToken);
+            if (portfolio is null)
+                throw new PortfolioNotFoundException(portfolioId);
+
+            return portfolio.ToPortfolioDto();
         }
         
-        public async Task<PortfolioTotalValue> GetPortfolioTotalValue(int portfolioId)
+        public async Task<PortfolioTotalValue> GetPortfolioTotalValue(int portfolioId, CancellationToken cancellationToken)
         {  
-            var portfolio = await GetPortfolioById(portfolioId);
-            if (portfolio == null) return null;
+            var portfolio = await _portfolioRepository.GetById(portfolioId, cancellationToken);
+            if (portfolio is null)
+                throw new PortfolioNotFoundException(portfolioId);
             var assets = await _assetRepository.GetAllByPortfolioIdAsync(portfolioId);
             var values = new List<AssetValue>();
             foreach (var asset in assets)
@@ -106,14 +103,14 @@ namespace WalletHub.API.Service
             };
         }
 
-        public async Task<PortfolioDailyChange> GetPortfolioDailyChange(int portfolioId)
+        public async Task<PortfolioDailyChange> GetPortfolioDailyChange(int portfolioId, CancellationToken cancellationToken)
         {
             var cacheKey = $"Portfolio_{portfolioId}_PortfolioTotalValue"; 
             var portfolioTotalValue = await _cache.GetAsync<PortfolioTotalValue>(cacheKey);
 
             if (portfolioTotalValue == null)
             {
-                portfolioTotalValue = await GetPortfolioTotalValue(portfolioId);
+                portfolioTotalValue = await GetPortfolioTotalValue(portfolioId, cancellationToken);
             }
 
             var snapshot = await _snapshotService.GetLatestDailySnapshot(portfolioId);
@@ -138,34 +135,43 @@ namespace WalletHub.API.Service
         }
 
 
-        public async Task<Portfolio> DeleteAsync(AppUser user, int portfolioId)
+        public async Task<PortfolioDto> DeleteAsync(AppUser user, int portfolioId, CancellationToken cancellationToken)
         {
-            return await _portfolioRepository.DeleteAsync(user, portfolioId);
+            var portfolio = await _portfolioRepository.DeleteAsync(user, portfolioId, cancellationToken);
+            if (portfolio is null)
+                throw new PortfolioNotFoundException(portfolioId);
+
+            return portfolio.ToPortfolioDto();
         }
 
-        public async Task<List<PortfolioDto>> GetAllUserPortfolios(string userId)
+        public async Task<List<PortfolioDto>> GetAllUserPortfolios(string userId, CancellationToken cancellationToken)
         {
-            var portfolios = await _portfolioRepository.GetAllUserPortfolios(userId);
+            var portfolios = await _portfolioRepository.GetAllUserPortfolios(userId, cancellationToken);
             var portfolioDtos = portfolios.ToPortfolioDtos();
 
             foreach (var p in portfolioDtos)
             {
-                var total = await GetPortfolioTotalValue(p.Id);
+                var total = await GetPortfolioTotalValue(p.Id, cancellationToken);
                 p.TotalValueUSD = total.TotalValueUSD;
             }
 
             return portfolioDtos;
         }
 
-        public async Task<PortfolioDto> UpdateNameAsync(AppUser user, int portfolioId, string newPortfolioName)
+        public async Task<PortfolioDto> UpdateNameAsync(AppUser user, int portfolioId, string newPortfolioName, CancellationToken cancellationToken)
         {
-            var portfolio = await _portfolioRepository.UpdateNameAsync(user, portfolioId, newPortfolioName);
+            var portfolio = await _portfolioRepository.UpdateNameAsync(user, portfolioId, newPortfolioName, cancellationToken);
+            if (portfolio is null)
+                throw new PortfolioNotFoundException(portfolioId);
+
             return portfolio.ToPortfolioDto();
         }
 
-        public async Task<List<Portfolio>> GetAllPortfoliosAsync()
+        public async Task<List<PortfolioDto>> GetAllPortfoliosAsync(CancellationToken cancellationToken)
         {
-            return await _portfolioRepository.GetAllPortfoliosAsync();
+            var portfolios = await _portfolioRepository.GetAllPortfoliosAsync(cancellationToken);
+
+            return portfolios.Select(p => p.ToPortfolioDto()).ToList();
         }
 
        

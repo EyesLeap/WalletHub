@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WalletHub.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97c76f740da9a8002c670d41d7f70cfa927ce0bf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+779ee169a4fe2d8eafbec1f81810f91e8d9aae41")]
 [assembly: System.Reflection.AssemblyProductAttribute("WalletHub.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WalletHub.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

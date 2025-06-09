@@ -60,8 +60,9 @@ namespace WalletHub.Tests
             };
 
             var createdAsset = new Asset { Id = 99, Symbol = "BTC", PortfolioId = portfolioId };
+            var cancellationToken = CancellationToken.None;
 
-            _portfolioRepoMock.Setup(x => x.GetById(portfolioId)).ReturnsAsync(portfolio);
+            _portfolioRepoMock.Setup(x => x.GetById(portfolioId, cancellationToken)).ReturnsAsync(portfolio);
             _cmpServiceMock.Setup(x => x.FindCurrencyBySymbolAsync("BTC")).ReturnsAsync(currency);
             _assetRepoMock.Setup(x => x.GetByPortfolioAndSymbol(portfolioId, "BTC")).ReturnsAsync((Asset?)null);
             _assetRepoMock.Setup(x => x.AddAsync(It.IsAny<Asset>())).ReturnsAsync(createdAsset);
@@ -70,7 +71,7 @@ namespace WalletHub.Tests
             _cacheMock.Setup(x => x.RemoveAsync(It.IsAny<string>(), default))
             .Returns(Task.CompletedTask);
 
-            var result = await _service.CreateTransactionAsync(portfolioId, dto);
+            var result = await _service.CreateTransactionAsync(portfolioId, dto, cancellationToken);
             
             Assert.NotNull(result);  
             Assert.Equal(portfolioId, result.PortfolioId);

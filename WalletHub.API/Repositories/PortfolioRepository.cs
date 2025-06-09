@@ -3,6 +3,10 @@ using WalletHub.API.Exceptions;
 using WalletHub.API.Interfaces;
 using WalletHub.API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WalletHub.API.Repository
 {
@@ -14,84 +18,73 @@ namespace WalletHub.API.Repository
             _context = context;
         }
 
-        public async Task<Portfolio> AddAsync(Portfolio portfolio)
+        public async Task<Portfolio> AddAsync(Portfolio portfolio, CancellationToken cancellationToken = default)
         {
-            await _context.Portfolios.AddAsync(portfolio);
-            await _context.SaveChangesAsync();
+            await _context.Portfolios.AddAsync(portfolio, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return portfolio;
         }
 
-        public async Task<Portfolio> DeleteAsync(AppUser appUser, int portfolioId)
+        public async Task<Portfolio?> DeleteAsync(AppUser appUser, int portfolioId, CancellationToken cancellationToken = default)
         {
-            var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(p => p.AppUser.Id == appUser.Id && 
-            p.Id == portfolioId);
+            var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(
+                p => p.AppUser.Id == appUser.Id && p.Id == portfolioId, cancellationToken);
 
-            if (portfolioModel == null)
-            {
-                return null;
-            }
+            if (portfolioModel is null)           
+                return null;       
 
             _context.Portfolios.Remove(portfolioModel);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return portfolioModel;
-
-            
         }
 
-        public Task<List<Portfolio>> GetAllPortfoliosAsync()
+        public Task<List<Portfolio>> GetAllPortfoliosAsync(CancellationToken cancellationToken = default)
         {
-             return _context.Portfolios
+            return _context.Portfolios
                 .Include(p => p.Transactions)
                 .Include(p => p.Assets)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
-
-        public async Task<List<Portfolio>> GetAllUserPortfolios(string userId)
+        public async Task<List<Portfolio>> GetAllUserPortfolios(string userId, CancellationToken cancellationToken = default)
         {
             return await _context.Portfolios
-                .Include(p => p.Assets) 
-                .Include(p => p.Transactions)  
+                .Include(p => p.Assets)
+                .Include(p => p.Transactions)
                 .Where(p => p.AppUserId == userId)
-                .ToListAsync();
-        }   
+                .ToListAsync(cancellationToken);
+        }
 
-
-        public async Task<Portfolio> GetById(int portfolioId)
+        public async Task<Portfolio?> GetById(int portfolioId, CancellationToken cancellationToken = default)
         {
             var portfolioModel = await _context.Portfolios
-                .Include(p => p.Assets) 
-                .Include(p => p.Transactions)  
-                .FirstOrDefaultAsync(p => p.Id == portfolioId);
-
-            if (portfolioModel == null)
-            {
-                throw new NotFoundException($"Portfolio with ID {portfolioId} not found.");
-            }
+                .Include(p => p.Assets)
+                .Include(p => p.Transactions)
+                .FirstOrDefaultAsync(p => p.Id == portfolioId, cancellationToken);
 
             return portfolioModel;
         }
 
-    public async Task<Portfolio?> GetByNameAsync(string userId, string portfolioName)
-    {
-       var portfolioModel = await _context.Portfolios
-                .Include(p => p.Assets) 
-                .Include(p => p.Transactions)  
-                .FirstOrDefaultAsync(p => p.Name == portfolioName && p.AppUserId == userId);
-
-            return portfolioModel;
-    }
-
-    public async Task<Portfolio> UpdateNameAsync(AppUser appUser, int portfolioId, string newPortfolioName)
+        public async Task<Portfolio?> GetByNameAsync(string userId, string portfolioName, CancellationToken cancellationToken = default)
         {
             var portfolioModel = await _context.Portfolios
-                .FirstOrDefaultAsync(p => p.AppUserId == appUser.Id && 
-                p.Id == portfolioId);
-        
-            if (portfolioModel == null) return null;
-                
+                .Include(p => p.Assets)
+                .Include(p => p.Transactions)
+                .FirstOrDefaultAsync(p => p.Name == portfolioName && p.AppUserId == userId, cancellationToken);
+
+            return portfolioModel;
+        }
+
+        public async Task<Portfolio?> UpdateNameAsync(AppUser appUser, int portfolioId, string newPortfolioName, CancellationToken cancellationToken = default)
+        {
+            var portfolioModel = await _context.Portfolios
+                .FirstOrDefaultAsync(p => p.AppUserId == appUser.Id && p.Id == portfolioId, cancellationToken);
+
+            if (portfolioModel is null)
+                return null;
+
             portfolioModel.Name = newPortfolioName;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return portfolioModel;
         }

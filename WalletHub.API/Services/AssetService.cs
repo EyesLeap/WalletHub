@@ -20,9 +20,9 @@ namespace WalletHub.API.Service
             _portfolioRepository = portfolioRepository;
         }
 
-        public async Task<IEnumerable<GetAssetDto>> GetAllByPortfolioIdAsync(int portfolioId)
+        public async Task<IEnumerable<GetAssetDto>> GetAllByPortfolioIdAsync(int portfolioId, CancellationToken cancellationToken)
         {
-            var portfolio = await _portfolioRepository.GetById(portfolioId);
+            var portfolio = await _portfolioRepository.GetById(portfolioId, cancellationToken);
             if (portfolio == null) return Enumerable.Empty<GetAssetDto>();
 
             return await _assetRepository.GetAllByPortfolioIdAsync(portfolioId);

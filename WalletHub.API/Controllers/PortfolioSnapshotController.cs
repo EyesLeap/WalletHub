@@ -30,13 +30,13 @@ namespace WalletHub.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateSnapshot([FromBody] int portfolioId)
+        public async Task<IActionResult> CreateSnapshot([FromBody] int portfolioId, CancellationToken cancellationToken)
         {
-            var portfolio = await _portfolioService.GetPortfolioById(portfolioId);
-            if (portfolio == null)          
+            var portfolio = await _portfolioService.GetPortfolioById(portfolioId, cancellationToken);
+            if (portfolio is null)          
                 throw new PortfolioNotFoundException(portfolioId);
             
-            var portfolioTotalValue = await _portfolioService.GetPortfolioTotalValue(portfolioId);
+            var portfolioTotalValue = await _portfolioService.GetPortfolioTotalValue(portfolioId, cancellationToken);
             var snapshot = await _portfolioSnapshotService.CreateSnapshotAsync(portfolioId, portfolioTotalValue);
 
             return Ok(snapshot);
