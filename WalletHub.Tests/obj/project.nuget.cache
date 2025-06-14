@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "RVOP/dYlooHyA+yaS7t28uUx4FkO0PCG6bvh1Kuwu2kNEbQW9oF/M89ITc1XC7fSo25ICM/cr31qYnbQZATa6Q==",
+  "dgSpecHash": "qxNhHI1NyN7W/GZV3dKF1Qehph9iCgj8v2b90RItCTcC5bv1f5ulDuy+A6FkRITlHIZEzG8Fz2z9YSnR6n4nPQ==",
   "success": true,
   "projectFilePath": "C:\\GitClones\\WalletHub\\WalletHub.Tests\\WalletHub.Tests.csproj",
   "expectedPackageFiles": [
@@ -69,7 +69,9 @@
     "C:\\Users\\Dan\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\scrutor\\6.0.1\\scrutor.6.0.1.nupkg.sha512",
+    "C:\\Users\\Dan\\.nuget\\packages\\sendgrid\\9.29.3\\sendgrid.9.29.3.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\stackexchange.redis\\2.8.31\\stackexchange.redis.2.8.31.nupkg.sha512",
+    "C:\\Users\\Dan\\.nuget\\packages\\starkbank-ecdsa\\1.3.3\\starkbank-ecdsa.1.3.3.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\Dan\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

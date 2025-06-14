@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using WalletHub.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +61,10 @@ builder.Services.AddDecorators();
 builder.Services.AddFluentValidation();
 
 builder.Services.AddHangfire(builder.Configuration);
+
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("AuthMessageSenderOptions"));
+builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
+
 
 var app = builder.Build();
 

@@ -183,7 +183,8 @@ namespace WalletHub.API.Extensions
                 options.Password.RequiredLength = 3;
                 options.Password.RequireNonAlphanumeric = false;
             })
-            .AddEntityFrameworkStores<ApplicationDBContext>();
+            .AddEntityFrameworkStores<ApplicationDBContext>()
+            .AddDefaultTokenProviders(); 
 
             return services;
         }

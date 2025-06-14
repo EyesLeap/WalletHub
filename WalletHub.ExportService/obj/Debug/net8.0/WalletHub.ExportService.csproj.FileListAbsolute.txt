@@ -204,3 +204,5 @@ C:\GitClones\WalletHub\WalletHub.ExportService\obj\Debug\net8.0\refint\WalletHub
 C:\GitClones\WalletHub\WalletHub.ExportService\obj\Debug\net8.0\WalletHub.ExportService.pdb
 C:\GitClones\WalletHub\WalletHub.ExportService\obj\Debug\net8.0\WalletHub.ExportService.genruntimeconfig.cache
 C:\GitClones\WalletHub\WalletHub.ExportService\obj\Debug\net8.0\ref\WalletHub.ExportService.dll
+c:\GitClones\WalletHub\WalletHub.ExportService\bin\Debug\net8.0\SendGrid.dll
+c:\GitClones\WalletHub\WalletHub.ExportService\bin\Debug\net8.0\StarkbankEcdsa.dll

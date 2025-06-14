@@ -125,6 +125,10 @@
               "target": "Package",
               "version": "[6.4.0, )"
             },
+            "sendgrid": {
+              "target": "Package",
+              "version": "[9.29.3, )"
+            },
             "xunit": {
               "target": "Package",
               "version": "[2.9.3, )"

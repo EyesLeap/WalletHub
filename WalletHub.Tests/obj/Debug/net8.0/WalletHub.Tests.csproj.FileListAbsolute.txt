@@ -193,3 +193,5 @@ C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Microsoft.Extensions.Cac
 C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
 C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
 C:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\Moq.EntityFrameworkCore.dll
+c:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\SendGrid.dll
+c:\GitClones\WalletHub\WalletHub.Tests\bin\Debug\net8.0\StarkbankEcdsa.dll

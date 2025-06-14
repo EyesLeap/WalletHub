@@ -255,3 +255,5 @@ C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\refint\WalletHub.API.dll
 C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\WalletHub.API.pdb
 C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\WalletHub.API.genruntimeconfig.cache
 C:\GitClones\WalletHub\WalletHub.API\obj\Debug\net8.0\ref\WalletHub.API.dll
+c:\GitClones\WalletHub\WalletHub.API\bin\Debug\net8.0\SendGrid.dll
+c:\GitClones\WalletHub\WalletHub.API\bin\Debug\net8.0\StarkbankEcdsa.dll

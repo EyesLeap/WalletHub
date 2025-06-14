@@ -13,4 +13,4 @@ namespace WalletHub.API.Interfaces
         Task<Transaction?> DeleteAsync(int transactionId);
 
     }
-}
+}           

@@ -26,7 +26,7 @@ namespace WalletHub.API.Controllers
         public async Task<IActionResult> GetPopularCurrencies([FromQuery] int limit = 10)
         {
             var currencies = await _cmpService.GetPopularCurrenciesAsync(limit);
-            if (currencies == null || !currencies.Any())     
+            if (currencies is null || !currencies.Any())     
                 throw new NotFoundException("No popular currencies found.");
             
             return Ok(currencies);

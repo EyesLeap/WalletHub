@@ -16,29 +16,32 @@ namespace WalletHub.API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
-        private readonly ICacheService _cache;
+        private readonly IEmailSenderService _emailSenderService;
         public AccountController(UserManager<AppUser> userManager,
          SignInManager<AppUser> signInManager,
-         ITokenService tokenService)
+         ITokenService tokenService,
+         IEmailSenderService emailSenderService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _emailSenderService = emailSenderService;
+
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
 
-            if (user == null) 
+            if (user == null)
                 throw new UnauthorizedException();
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if (!result.Succeeded) 
+            if (!result.Succeeded)
                 throw new UnauthorizedException();
 
             return Ok(
@@ -54,39 +57,51 @@ namespace WalletHub.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            try
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var appUser = new AppUser
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                UserName = registerDto.UserName,
+                Email = registerDto.Email
+            };
 
-                var appUser = new AppUser
-                {
-                    UserName = registerDto.UserName,
-                    Email = registerDto.Email
-                };
+            var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
+            if (!createdUser.Succeeded)
+                throw new UserNotFoundException(appUser.UserName);
 
-                var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
-                if (!createdUser.Succeeded)
-                    throw new UserNotFoundException(appUser.UserName);
+            var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
+            if (!roleResult.Succeeded)
+                throw new WalletHubException("Failed to assign role");
 
-                var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
-                if (!roleResult.Succeeded)
-                    throw new WalletHubException("Failed to assign role");
-    
-                return Ok(
-                    new NewUserDto
-                    {
-                        UserName = appUser.UserName,
-                        Email = appUser.Email,
-                        Token = _tokenService.CreateToken(appUser)
-                    }
-                );
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e);
-            }
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
+                new { userId = appUser.Id, token }, Request.Scheme);
 
+            var subject = "Confirm your email - WalletHub";
+            var message = $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>Confirm Email</a>";
+
+            await _emailSenderService.SendEmailAsync(appUser.Email, subject, message);
+
+            return Ok("Registration successful. Please check your email to confirm your account.");
         }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+                return BadRequest("Invalid email confirmation request.");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound($"User with ID {userId} not found.");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+                return Ok("Email confirmed successfully. You can now log in.");
+            else
+                return BadRequest("Email confirmation failed.");
+        }
+
     }
 }
