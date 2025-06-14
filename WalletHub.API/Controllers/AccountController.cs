@@ -36,7 +36,7 @@ namespace WalletHub.API.Controllers
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
 
-            if (user == null)
+            if (user is null)
                 throw new UnauthorizedException();
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
@@ -89,11 +89,11 @@ namespace WalletHub.API.Controllers
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            if (userId == null || token == null)
+            if (userId is null || token is null)
                 return BadRequest("Invalid email confirmation request.");
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            if (user is null)
                 return NotFound($"User with ID {userId} not found.");
 
             var result = await _userManager.ConfirmEmailAsync(user, token);

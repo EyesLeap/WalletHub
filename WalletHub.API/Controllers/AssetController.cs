@@ -36,7 +36,7 @@ namespace WalletHub.API.Controllers
                 throw new UnauthorizedException("User is not authorized.");
 
             var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null)
+            if (appUser is null)
                 throw new UserNotFoundException("User not found.");
 
             var currencies = await _assetService.GetAllByPortfolioIdAsync(portfolioId, cancellationToken);
@@ -52,7 +52,7 @@ namespace WalletHub.API.Controllers
                 throw new UnauthorizedException("User is not authorized.");
 
             var appUser = await _userManager.FindByNameAsync(username);
-            if (appUser == null)
+            if (appUser is null)
                 throw new UserNotFoundException("User not found.");
 
             var success = await _assetService.RemoveAssetAsync(portfolioId, symbol);

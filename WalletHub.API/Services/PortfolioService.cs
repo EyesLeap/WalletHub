@@ -77,7 +77,7 @@ namespace WalletHub.API.Service
             foreach (var asset in assets)
             {
                 var currency = await _cmpService.FindCurrencyBySymbolAsync(asset.Symbol);
-                if (currency == null) continue;
+                if (currency is null) continue;
                 
                 values.Add(new AssetValue
                 {
@@ -108,14 +108,14 @@ namespace WalletHub.API.Service
             var cacheKey = $"Portfolio_{portfolioId}_PortfolioTotalValue"; 
             var portfolioTotalValue = await _cache.GetAsync<PortfolioTotalValue>(cacheKey);
 
-            if (portfolioTotalValue == null)
+            if (portfolioTotalValue is null)
             {
                 portfolioTotalValue = await GetPortfolioTotalValue(portfolioId, cancellationToken);
             }
 
             var snapshot = await _snapshotService.GetLatestDailySnapshot(portfolioId);
 
-            if (snapshot == null || snapshot.TotalValueUSD == 0)
+            if (snapshot is null || snapshot.TotalValueUSD is 0)
             {
                 return new PortfolioDailyChange
                 {

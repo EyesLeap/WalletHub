@@ -51,7 +51,7 @@ namespace WalletHub.API.Controllers
 
             var transaction = await _transactionService.CreateTransactionAsync(portfolioId, dto, cancellationToken);
 
-            if (transaction == null)
+            if (transaction is null)
                 throw new TransactionProcessingException("Transaction could not be processed");
 
             return CreatedAtAction(nameof(GetTransactionById), new { portfolioId = portfolioId, transactionId = transaction.Id }, transaction.ToTransactionDto());
@@ -86,7 +86,7 @@ namespace WalletHub.API.Controllers
         {
             var transaction = await _transactionService.GetTransactionByIdAsync(transactionId);
 
-            if (transaction == null)
+            if (transaction is null)
                 throw new TransactionNotFoundException("Transaction not found");
 
             return Ok(transaction.ToTransactionDto());
@@ -111,7 +111,7 @@ namespace WalletHub.API.Controllers
         {
             var transaction = await _transactionService.DeleteAsync(transactionId);
 
-            if (transaction == null)
+            if (transaction is null)
                 throw new TransactionNotFoundException("Transaction does not exist");
 
             return NoContent();

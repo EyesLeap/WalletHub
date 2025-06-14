@@ -34,16 +34,16 @@ namespace WalletHub.API.Service
         public async Task<Transaction?> CreateTransactionAsync(int portfolioId, CreateTransactionDto dto, CancellationToken cancellationToken)
         { 
             var portfolio = await _portfolioRepository.GetById(portfolioId, cancellationToken);
-            if (portfolio == null)
+            if (portfolio is null)
                 throw new PortfolioNotFoundException(portfolioId);
 
             var marketCurrency = await _cmpService.FindCurrencyBySymbolAsync(dto.Symbol);
-            if (marketCurrency == null) 
+            if (marketCurrency is null) 
                 throw new NotFoundException($"Market currency with symbol {dto.Symbol} was not found.");
 
             var asset = await _assetRepository.GetByPortfolioAndSymbol(portfolioId, dto.Symbol);
 
-            if (asset == null && dto.TransactionType == TransactionType.Buy) 
+            if (asset is null && dto.TransactionType is TransactionType.Buy) 
                 asset = await CreateAsset(marketCurrency, portfolioId, dto);
 
             bool success = await ProcessTransactionAsync(asset, dto);
@@ -76,10 +76,10 @@ namespace WalletHub.API.Service
 
         private async Task<bool> ProcessTransactionAsync(Asset asset, CreateTransactionDto dto)
         {
-            if (asset == null) return false;
+            if (asset is null) return false;
                  
 
-            if (dto.TransactionType == TransactionType.Sell)
+            if (dto.TransactionType is TransactionType.Sell)
             {
                 if (asset.Amount < dto.Amount)
                     return false; 
@@ -109,15 +109,15 @@ namespace WalletHub.API.Service
             decimal totalValueBefore = asset.AveragePurchasePrice * asset.Amount;
             decimal totalValueNew = pricePerCoin * Math.Abs(transactionAmount);
 
-            if (transactionType == TransactionType.Buy)
+            if (transactionType is TransactionType.Buy)
             {             
                 asset.Amount += transactionAmount;
                 asset.AveragePurchasePrice = (totalValueBefore + totalValueNew) / asset.Amount;
             }
-            else if (transactionType == TransactionType.Sell)
+            else if (transactionType is TransactionType.Sell)
             {
                 asset.Amount -= transactionAmount;
-                if (asset.Amount == 0) asset.AveragePurchasePrice = 0;
+                if (asset.Amount is 0) asset.AveragePurchasePrice = 0;
 
             }
 
@@ -136,9 +136,9 @@ namespace WalletHub.API.Service
         public async Task<Transaction?> DeleteAsync(int transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);
-            if (transaction == null) 
+            if (transaction is null) 
                 throw new TransactionNotFoundException($"Transaction with id {transactionId} was not found.");
-            if (transaction.TransactionType == TransactionType.Buy)
+            if (transaction.TransactionType is TransactionType.Buy)
             {
                 decimal totalValueBefore = transaction.Asset.AveragePurchasePrice * transaction.Asset.Amount;
                 decimal totalValueNew = transaction.Amount * transaction.PricePerCoin;
@@ -154,7 +154,7 @@ namespace WalletHub.API.Service
                     transaction.Asset.AveragePurchasePrice = 0;
                 }           
             }
-            else if (transaction.TransactionType == TransactionType.Sell)
+            else if (transaction.TransactionType is TransactionType.Sell)
             {
                transaction.Asset.Amount += transaction.Amount;  
             }

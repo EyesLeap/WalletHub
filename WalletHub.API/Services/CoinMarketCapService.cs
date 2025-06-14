@@ -36,13 +36,13 @@ public class CoinMarketCapService : ICoinMarketCapService
         
         var response = await ExecuteApiRequestAsync<CMPQuoteResponse>("cryptocurrency/quotes/latest", queryParams);
         
-        if (response?.Data == null || !response.Data.Any())
+        if (response?.Data is null || !response.Data.Any())
         {
             return null;
         }
         
         var currencyData = response.Data[symbol];
-        if (currencyData == null)
+        if (currencyData is null)
         {
             return null;
         }
@@ -72,7 +72,7 @@ public class CoinMarketCapService : ICoinMarketCapService
         
         var response = await ExecuteApiRequestAsync<CMPListingsResponse>("cryptocurrency/listings/latest", queryParams);
         
-        if (response?.Data == null || !response.Data.Any())
+        if (response?.Data is null || !response.Data.Any())
         {
             return null;
         }

@@ -28,7 +28,7 @@ namespace WalletHub.API.Service
         {
                 var transactions = await _transactionService.GetAllTransactionsAsync(request.PortfolioId, request.Query);
 
-                if (transactions == null || !transactions.Any())
+                if (transactions is null || !transactions.Any())
                     throw new TransactionNotFoundException("No transactions found.");
 
                 var reportDto = transactions.ToReportDto(request.PortfolioId, request.Format);
