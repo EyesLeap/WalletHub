@@ -32,7 +32,7 @@ namespace WalletHub.API.Extensions
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-           
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPortfolioService, PortfolioService>();

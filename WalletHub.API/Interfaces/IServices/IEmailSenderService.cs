@@ -9,5 +9,5 @@ namespace WalletHub.API.Interfaces;
 
 public interface IEmailSenderService
 {
-    Task SendEmailAsync(string email, string subject, string htmlMessage);
+    Task SendEmailAsync(string toEmail, string subject, string username, string confirmationLink);
 }
