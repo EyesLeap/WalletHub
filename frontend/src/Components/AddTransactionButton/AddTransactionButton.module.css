@@ -1,5 +1,5 @@
 .addTransactionButton {
-  background: var(--gradient-blue-accent); 
+  background: var(--color-accent); 
   color: var(--color-text);
   font-weight: bold;
   font-family: 'IBM Plex Sans', sans-serif;

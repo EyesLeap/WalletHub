@@ -11,8 +11,8 @@
   --color-text: #ffffff;
   --color-text-muted: #9ca3af;
 
-  --color-accent: #3b82f6;
-  --color-accent-hover: #2563eb;
+  --color-accent: #6576e7;
+  --color-accent-hover: #e4b746;
  
   --color-selected-portfolio: #3c3f4f;
 
@@ -27,7 +27,7 @@
   --gradient-light: linear-gradient(to bottom right, #2c2f3e, #222531);
   --gradient-blue-accent: linear-gradient(to right, #3b82f6, #2563eb);
   --gradient-red-accent: linear-gradient(to right, #ef4444, #d32f2f);
-
+  
   --text-regular: 'IBM Plex Sans', sans-serif;
 }
 

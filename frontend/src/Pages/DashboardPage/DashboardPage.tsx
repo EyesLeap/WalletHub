@@ -139,7 +139,7 @@ const closeModal = (name: keyof typeof modals) =>
         const data = await getPortfolioSnapshotsAPI(activePortfolioId, snapshotsFilter);
         setSnapshots(data);
       } catch (error) {
-        console.error('Ошибка при получении снимков:', error);
+        console.error('Error fetching snapshots', error);
       }
     };
 

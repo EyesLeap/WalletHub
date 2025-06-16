@@ -4,12 +4,16 @@
 }
 
 .navbar-link:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-hover);
+}
+
+.welcome-user:hover {
+  color: var(--color-accent-hover);
 }
 
 .navbar-button {
   font-family: 'IBM Plex Sans', sans-serif;
-  background: var(--gradient-blue-accent);
+  background: var(--color-accent);
   color: var(--color-text);
   font-weight: bold;
 }

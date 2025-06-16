@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Logo from '../Navbar/wallet-hub-logo6.svg';
+import Logo from '../Navbar/wallet-hub-logo.svg';
 import "./Navbar.css";
 import { useAuth } from "../../Context/useAuth";
 
@@ -34,7 +34,7 @@ const Navbar = (props: Props) => {
         </div>
         {isLoggedIn() ? (
           <div className="hidden lg:flex items-center space-x-6 text-white">
-            <div className="hover:text-darkBlue">
+            <div className="welcome-user">
               Welcome, {user?.userName}
             </div>
             <button

@@ -1,6 +1,6 @@
 namespace WalletHub.API.Dtos.Account
 {
-    public class NewUserDto
+    public class AuthResponseDto
     {
         public string? UserName { get; set; }
         public string? Email { get; set; }

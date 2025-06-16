@@ -54,7 +54,7 @@ export const UserProvider = ({ children }: Props) => {
           setUser(userObj!);
           axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data.token;
 
-          toast.success("Login Success!");
+          toast.success("Welcome!");
           navigate("/dashboard");
         }
       })

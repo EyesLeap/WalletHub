@@ -58,7 +58,7 @@
 
 .create-portfolio-btn {
   margin-top: 1rem;
-  background: var(--gradient-blue-accent);
+  background: var(--color-accent);
   color: var(--color-text-light);
   font-weight: bold;
   padding: 0.75rem 1rem;

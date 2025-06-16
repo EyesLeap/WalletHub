@@ -14,24 +14,12 @@ namespace WalletHub.API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-
         private readonly IAccountService _accountService;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly ITokenService _tokenService;
-        private readonly IEmailSenderService _emailSenderService;
-        public AccountController(UserManager<AppUser> userManager,
-         SignInManager<AppUser> signInManager,
-         ITokenService tokenService,
-         IEmailSenderService emailSenderService,
+
+        public AccountController(
          IAccountService accountService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
-            _emailSenderService = emailSenderService;
             _accountService = accountService;
-
         }
 
         [HttpPost("login")]
@@ -49,27 +37,43 @@ namespace WalletHub.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var appUser = await _accountService.RegisterAsync(registerDto);
-            if (appUser == null)
-                return BadRequest("User registration failed.");
-
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
-
-            var confirmationLink = Url.Action(
-                nameof(ConfirmEmail), "Account",
-                new { userId = appUser.Id, token = token },
+            var baseConfirmationLink = Url.Action(
+                nameof(ConfirmEmail),
+                "Account",
+                null,
                 Request.Scheme);
 
-            var result = await _accountService.SendConfirmationEmailAsync(appUser, confirmationLink);
+            var result = await _accountService.RegisterWithConfirmationAsync(registerDto, baseConfirmationLink);
+
             return Ok(result);
+
+
         }
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {          
-            var result = await _accountService.ConfirmEmailAsync(userId, token);        
-            return Ok(result);           
-             
+        {
+            var result = await _accountService.ConfirmEmailAsync(userId, token);
+            return Ok(result);
+
+        }
+        
+        [HttpPost("resend-confirmation")]
+        public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendConfirmationDto resendDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+           
+            var baseConfirmationLink = Url.Action(
+                nameof(ConfirmEmail), 
+                "Account",
+                null,
+                Request.Scheme);
+
+            var result = await _accountService.ResendConfirmationEmailAsync(resendDto.Email, baseConfirmationLink);
+            return Ok(new { message = result });
+           
         }
 
     }

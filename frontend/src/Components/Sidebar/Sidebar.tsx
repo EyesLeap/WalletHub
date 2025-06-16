@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onPortfolioClick, activePortfolioId }
         const data = await getAllPortfoliosAPI(); 
         setPortfolios(data); 
       } catch (error) {
-        console.error("Ошибка загрузки портфолио:", error);
+        console.error("Error in loading portfolio:", error);
       }
     };
 
