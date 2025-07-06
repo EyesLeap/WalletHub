@@ -14,9 +14,9 @@ using WalletHub.API.Models;
 using WalletHub.API.Service;
 using Xunit;
 
-namespace WalletHub.Tests.UnitTests
+namespace WalletHub.Tests.UnitTests.Services
 {
-    public class CoinMarketCapServiceTests
+    public class CoinMarketCapServiceTests : IDisposable
     {
         private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
         private readonly ICoinMarketCapService _service;
@@ -111,6 +111,11 @@ namespace WalletHub.Tests.UnitTests
                 $"popular_currencies_{limit}", 
                 It.IsAny<List<MarketCurrency>>(), 
                 It.IsAny<TimeSpan>()), Times.Once);
+        }
+
+        public void Dispose()
+        {
+            
         }
 
     }

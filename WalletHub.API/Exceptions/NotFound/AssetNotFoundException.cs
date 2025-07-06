@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace WalletHub.API.Exceptions
+namespace WalletHub.API.Exceptions.NotFound
 {
     public class AssetNotFoundException : WalletHubException
     {

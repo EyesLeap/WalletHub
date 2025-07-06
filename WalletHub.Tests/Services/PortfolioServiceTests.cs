@@ -9,9 +9,9 @@ using WalletHub.API.Models;
 using WalletHub.API.Service;
 using Xunit;
 
-namespace WalletHub.Tests.UnitTests
+namespace WalletHub.Tests.UnitTests.Services
 {
-    public class PortfolioServiceTests
+    public class PortfolioServiceTests : IDisposable
     {
         private readonly Mock<IPortfolioRepository> _portfolioRepoMock;
         private readonly Mock<ICoinMarketCapService> _cmpServiceMock;
@@ -103,6 +103,11 @@ namespace WalletHub.Tests.UnitTests
             Assert.NotNull(result); 
             Assert.Equal(portfolioId, result.Id);  
             Assert.Equal("My Portfolio", result.Name);  
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

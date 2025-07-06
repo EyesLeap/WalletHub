@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.Tests", "WalletHub.Tests\WalletHub.Tests.csproj", "{AF76FB57-E220-4867-BDCF-1F05290C23E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletHub.UnitTests", "WalletHub.Tests\WalletHub.UnitTests.csproj", "{AF76FB57-E220-4867-BDCF-1F05290C23E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.API", "WalletHub.API\WalletHub.API.csproj", "{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletHub.API", "WalletHub.API\WalletHub.API.csproj", "{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletHub.ExportService", "WalletHub.ExportService\WalletHub.ExportService.csproj", "{36DF7A6A-B62B-410E-A773-7C70C3255224}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalletHub.ExportService", "WalletHub.ExportService\WalletHub.ExportService.csproj", "{36DF7A6A-B62B-410E-A773-7C70C3255224}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{80674283-1F20-4835-BE75-EBFEF57FF778}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +25,6 @@ Global
 		{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC592783-1BBC-4620-8763-8CCDA7DC8FC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{986358A6-195D-49E6-9F41-20E877EC6E0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36DF7A6A-B62B-410E-A773-7C70C3255224}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,6 +32,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AF76FB57-E220-4867-BDCF-1F05290C23E3} = {80674283-1F20-4835-BE75-EBFEF57FF778}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F2318049-7E09-4E39-B9F9-4D7366F033D2}

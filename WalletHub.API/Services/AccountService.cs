@@ -1,16 +1,10 @@
-using WalletHub.API.Dtos.Currency;
-using WalletHub.API.Dtos.Portfolio;
-using WalletHub.API.Dtos.AssetDtos;
-using WalletHub.API.Interfaces;
-using WalletHub.API.Mappers;
-using WalletHub.API.Models;
-using WalletHub.API.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using WalletHub.API.Dtos.Account;
 using WalletHub.API.Exceptions;
+using WalletHub.API.Exceptions.NotFound;
+using WalletHub.API.Interfaces;
+using WalletHub.API.Models;
 
 namespace WalletHub.API.Service;
 

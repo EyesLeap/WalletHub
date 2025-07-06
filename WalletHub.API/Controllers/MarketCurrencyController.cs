@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WalletHub.API.Exceptions;
+using WalletHub.API.Exceptions.NotFound;
 
 namespace WalletHub.API.Controllers
 {

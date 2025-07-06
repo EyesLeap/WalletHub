@@ -5,6 +5,7 @@ using WalletHub.API.Mappers;
 using WalletHub.API.Models;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using WalletHub.API.Exceptions;
 
 namespace WalletHub.API.Service;
 
@@ -36,17 +37,14 @@ public class CoinMarketCapService : ICoinMarketCapService
         
         var response = await ExecuteApiRequestAsync<CMPQuoteResponse>("cryptocurrency/quotes/latest", queryParams);
         
-        if (response?.Data is null || !response.Data.Any())
-        {
-            return null;
-        }
+        if (response?.Data is null || !response.Data.Any())      
+            throw new MarketCurrencyNotFoundException(symbol);
         
         var currencyData = response.Data[symbol];
-        if (currencyData is null)
-        {
-            return null;
-        }
-        
+
+        if (currencyData is null)    
+            throw new MarketCurrencyNotFoundException(symbol);
+               
         return new MarketCurrency
         {
             Name = currencyData.Name,

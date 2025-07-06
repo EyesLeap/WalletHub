@@ -13,10 +13,10 @@ using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 
 
-namespace WalletHub.Tests
+namespace WalletHub.Tests.UnitTests.Services
 {
 
-    public class TokenServiceTests
+    public class TokenServiceTests : IDisposable
     {
         private readonly Mock<IConfiguration> _configMock;
         private readonly TokenService _tokenService;
@@ -60,6 +60,9 @@ namespace WalletHub.Tests
             Assert.Equal("TestUser", usernameClaim);
         }
 
-       
+        public void Dispose()
+        {
+            
+        }
     }
 }

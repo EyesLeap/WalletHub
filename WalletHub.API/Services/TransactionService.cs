@@ -39,7 +39,7 @@ namespace WalletHub.API.Service
 
             var marketCurrency = await _cmpService.FindCurrencyBySymbolAsync(dto.Symbol);
             if (marketCurrency is null) 
-                throw new NotFoundException($"Market currency with symbol {dto.Symbol} was not found.");
+                throw new MarketCurrencyNotFoundException(dto.Symbol);
 
             var asset = await _assetRepository.GetByPortfolioAndSymbol(portfolioId, dto.Symbol);
 

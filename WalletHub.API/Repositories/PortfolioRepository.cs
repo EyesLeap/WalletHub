@@ -30,8 +30,8 @@ namespace WalletHub.API.Repository
             var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(
                 p => p.AppUser.Id == appUser.Id && p.Id == portfolioId, cancellationToken);
 
-            if (portfolioModel is null)           
-                return null;       
+            if (portfolioModel is null)
+                return null;
 
             _context.Portfolios.Remove(portfolioModel);
             await _context.SaveChangesAsync(cancellationToken);
@@ -88,5 +88,7 @@ namespace WalletHub.API.Repository
 
             return portfolioModel;
         }
+        
+        
     }
 }

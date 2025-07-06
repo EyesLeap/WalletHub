@@ -30,7 +30,7 @@ namespace WalletHub.API.Caching
 
             var cachedPortfolios = await _cache.GetAsync<List<PortfolioDto>>(cacheKey);
 
-            if (cachedPortfolios != null)
+            if (cachedPortfolios is not null)
             {
                 cachedPortfolios.Add(portfolio);
                 
@@ -55,11 +55,9 @@ namespace WalletHub.API.Caching
             var cacheKey = $"Portfolio_{portfolioId}_PortfolioTotalValue"; 
             var cachedValues = await _cache.GetAsync<PortfolioTotalValue>(cacheKey);
 
-            if (cachedValues != null)
-            {
+            if (cachedValues is not null)            
                 return cachedValues;
-            }
-
+            
             var portfolioValue = await _portfolioService.GetPortfolioTotalValue(portfolioId, cancellationToken);
 
             await _cache.SetAsync(cacheKey, portfolioValue, TimeSpan.FromMinutes(5));
@@ -72,10 +70,9 @@ namespace WalletHub.API.Caching
             var cacheKey = $"Portfolio_{portfolioId}_PortfolioDailyChange";
             var cachedChange = await _cache.GetAsync<PortfolioDailyChange>(cacheKey);
 
-            if (cachedChange != null)
-            {
+            if (cachedChange is not null)           
                 return cachedChange;
-            }
+            
 
             var dailyChange = await _portfolioService.GetPortfolioDailyChange(portfolioId, cancellationToken);
 
@@ -97,10 +94,10 @@ namespace WalletHub.API.Caching
             var portfoliosCacheKey = $"User_{user.Id}_Portfolios";
             var cachedPortfolios = await _cache.GetAsync<List<PortfolioDto>>(portfoliosCacheKey);
 
-            if (cachedPortfolios != null)
+            if (cachedPortfolios is not null)
             {
                 var portfolioToRemove = cachedPortfolios.FirstOrDefault(p => p.Id == portfolioId);
-                if (portfolioToRemove != null)
+                if (portfolioToRemove is not null)
                 {
                     cachedPortfolios.Remove(portfolioToRemove);
 
@@ -116,10 +113,9 @@ namespace WalletHub.API.Caching
             var cacheKey = $"User_{userId}_Portfolios";
             var cachedData = await _cache.GetAsync<List<PortfolioDto>>(cacheKey);
 
-            if (cachedData != null)
-            {
+            if (cachedData is not null)           
                 return cachedData;
-            }
+            
 
             var portfolioDtos = await _portfolioService.GetAllUserPortfolios(userId, cancellationToken);
 
@@ -135,7 +131,7 @@ namespace WalletHub.API.Caching
             var cacheKey = $"User_{user.Id}_Portfolios";
             var cachedPortfolios = await _cache.GetAsync<List<PortfolioDto>>(cacheKey);
 
-            if (cachedPortfolios != null)
+            if (cachedPortfolios is not null)
             {
                 var index = cachedPortfolios.FindIndex(p => p.Id == updatedPortfolio.Id);
                 if (index != -1)
