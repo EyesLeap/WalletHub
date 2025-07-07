@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using WalletHub.API.Dtos.AuthToken;
 
 namespace WalletHub.API.Controllers
 {
@@ -46,8 +49,6 @@ namespace WalletHub.API.Controllers
             var result = await _accountService.RegisterWithConfirmationAsync(registerDto, baseConfirmationLink);
 
             return Ok(result);
-
-
         }
 
         [HttpGet("confirm-email")]
@@ -55,7 +56,6 @@ namespace WalletHub.API.Controllers
         {
             var result = await _accountService.ConfirmEmailAsync(userId, token);
             return Ok(result);
-
         }
         
         [HttpPost("resend-confirmation")]
@@ -63,7 +63,6 @@ namespace WalletHub.API.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
            
             var baseConfirmationLink = Url.Action(
                 nameof(ConfirmEmail), 
@@ -71,9 +70,45 @@ namespace WalletHub.API.Controllers
                 null,
                 Request.Scheme);
 
-            var result = await _accountService.ResendConfirmationEmailAsync(resendDto.Email, baseConfirmationLink);
-            return Ok(new { message = result });
+            await _accountService
+                .ResendConfirmationEmailAsync(resendDto.Email, baseConfirmationLink);
+
+            return Ok();
            
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var tokenResponse = await _accountService.RefreshTokenAsync(request);
+            return Ok(tokenResponse);
+        }
+
+        [HttpPost("revoke")]
+        [Authorize]
+        public async Task<IActionResult> RevokeToken()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("Invalid user");
+
+            var result = await _accountService.RevokeRefreshTokenAsync(userId);
+            return Ok(new { success = result, message = "Refresh token revoked successfully" });
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("Invalid user");
+
+            await _accountService.RevokeRefreshTokenAsync(userId);
+            return Ok(new { message = "Logged out successfully" });
         }
 
     }

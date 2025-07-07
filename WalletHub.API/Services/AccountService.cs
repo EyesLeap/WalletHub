@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using WalletHub.API.Dtos.Account;
+using WalletHub.API.Dtos.AuthToken;
 using WalletHub.API.Exceptions;
 using WalletHub.API.Exceptions.NotFound;
 using WalletHub.API.Interfaces;
@@ -30,7 +32,7 @@ public class AccountService : IAccountService
     public async Task<AuthResponseDto> RegisterWithConfirmationAsync(RegisterDto registerDto, string confirmationLink)
     {
         var appUser = await RegisterAsync(registerDto);
-        if (appUser == null)
+        if (appUser is null)
             throw new WalletHubException("User registration failed.");
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
@@ -43,14 +45,14 @@ public class AccountService : IAccountService
         {
             UserName = appUser.UserName,
             Email = appUser.Email,
-            Token = _tokenService.CreateToken(appUser)
+            TokenResponse = await _tokenService.CreateTokenResponse(appUser)
         };
     }
 
     public async Task<AppUser> RegisterAsync(RegisterDto registerDto)
     {
         var existingUserByName = await _userManager.FindByNameAsync(registerDto.UserName);
-        if (existingUserByName != null)
+        if (existingUserByName is not null)
             throw new WalletHubException("User with this username already exists.");
 
         var appUser = new AppUser
@@ -89,36 +91,47 @@ public class AccountService : IAccountService
         if (!result.Succeeded)
             throw new UnauthorizedException("Invalid username or password.");
 
+        var tokenResponse = await _tokenService.CreateTokenResponse(user);
+
+        await SaveRefreshTokenAsync(user, tokenResponse.RefreshToken);
+
         return new AuthResponseDto
         {
             UserName = user.UserName,
             Email = user.Email,
-            Token = _tokenService.CreateToken(user)
+            TokenResponse = tokenResponse
         };
     }
 
-    public async Task<string> SendConfirmationEmailAsync(AppUser appUser, string confirmationLink)
+    public async Task SendConfirmationEmailAsync(AppUser appUser, string confirmationLink)
     {   
-        if (appUser == null)
+        if (appUser is null)
             throw new ArgumentNullException(nameof(appUser));
 
         if (string.IsNullOrEmpty(confirmationLink))
             throw new ArgumentException("Confirmation link cannot be null or empty.", nameof(confirmationLink));
 
         var subject = "Confirm your email - WalletHub";
-
-        try
-        {
-            await _emailSenderService.SendEmailAsync(appUser.Email, subject, appUser.UserName, confirmationLink);
-            return "Registration successful. Please check your email to confirm your account.";
-        }
-        catch (Exception ex)
-        {
-            throw new WalletHubException($"Failed to send confirmation email: {ex.Message}");
-        }
+  
+        await _emailSenderService.SendEmailAsync(appUser.Email, subject, appUser.UserName, confirmationLink);            
     }
 
-    public async Task<string> ConfirmEmailAsync(string userId, string token)
+    public async Task ResendConfirmationEmailAsync(string email, string confirmationLink)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            throw new UserNotFoundException(email);
+
+        if (user.EmailConfirmed)
+            throw new WalletHubException("Email is already confirmed.");
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var finalConfirmationLink = $"{confirmationLink}?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+
+        await SendConfirmationEmailAsync(user, finalConfirmationLink);
+    }
+
+    public async Task<bool> ConfirmEmailAsync(string userId, string token)
     {
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
             throw new ArgumentException("Invalid email confirmation request.");
@@ -128,11 +141,12 @@ public class AccountService : IAccountService
             throw new UserNotFoundException(userId);
 
         if (user.EmailConfirmed)
-            return "Email is already confirmed. You can log in.";
+            throw new WalletHubException("Email is already confirmed.");
 
         var result = await _userManager.ConfirmEmailAsync(user, token);
+
         if (result.Succeeded)
-            return "Email confirmed successfully. You can now log in.";
+            return true;
         else
         {
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
@@ -140,18 +154,51 @@ public class AccountService : IAccountService
         }
     }
 
-    public async Task<string> ResendConfirmationEmailAsync(string email, string confirmationLink)
+    public async Task<AuthTokenResponse> RefreshTokenAsync(RefreshTokenRequest request)
+    {   
+        var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
+        var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            throw new UnauthorizedException("Invalid token");
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || user.RefreshToken != request.RefreshToken ||
+            user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+
+        var tokenResponse = await _tokenService.CreateTokenResponse(user);
+
+        user.RefreshToken = tokenResponse.RefreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        await _userManager.UpdateAsync(user);
+
+        return tokenResponse;
+       
+    }
+
+    public async Task<bool> RevokeRefreshTokenAsync(string userId)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
-            throw new UserNotFoundException(email);
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            throw new UserNotFoundException(userId);
 
-        if (user.EmailConfirmed)
-            throw new WalletHubException("Email is already confirmed.");
+        user.RefreshToken = null;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow;
+        var result = await _userManager.UpdateAsync(user);
 
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var finalConfirmationLink = $"{confirmationLink}?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+        if (!result.Succeeded)
+            throw new WalletHubException("Failed to revoke refresh token");
 
-        return await SendConfirmationEmailAsync(user, finalConfirmationLink);
+        return true;
+    }
+
+    private async Task SaveRefreshTokenAsync(AppUser user, string refreshToken)
+    {
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        await _userManager.UpdateAsync(user);
     }
 }

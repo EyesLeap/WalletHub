@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace WalletHub.Tests.UnitTests.Services
@@ -19,6 +20,8 @@ namespace WalletHub.Tests.UnitTests.Services
     public class TokenServiceTests : IDisposable
     {
         private readonly Mock<IConfiguration> _configMock;
+        private readonly Mock<UserManager<AppUser>> _userManagerMock;
+        private readonly IConfiguration _configuration;
         private readonly TokenService _tokenService;
 
         public TokenServiceTests()
@@ -30,15 +33,26 @@ namespace WalletHub.Tests.UnitTests.Services
                 {"JWT:Audience", "Audience"}
             };
 
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
+            _configuration = new ConfigurationBuilder()
+               .AddInMemoryCollection(inMemorySettings)
+               .Build();
 
-            _tokenService = new TokenService(configuration);
+            _userManagerMock = CreateUserManagerMock();
+
+            _tokenService = new TokenService(_configuration, _userManagerMock.Object);
         }
-        
+
+        private Mock<UserManager<AppUser>> CreateUserManagerMock()
+        {
+            var store = new Mock<IUserStore<AppUser>>();
+            var mgr = new Mock<UserManager<AppUser>>(store.Object, null, null, null, null, null, null, null, null);
+            mgr.Object.UserValidators.Add(new UserValidator<AppUser>());
+            mgr.Object.PasswordValidators.Add(new PasswordValidator<AppUser>());
+            return mgr;
+        }
+
         [Fact]
-        public void CreateToken_ReturnsValidToken()
+        public async Task CreateToken_ReturnsValidToken()
         {
             var user = new AppUser
             {
@@ -46,7 +60,7 @@ namespace WalletHub.Tests.UnitTests.Services
                 UserName = "TestUser"
             };
 
-            var token = _tokenService.CreateToken(user);
+            var token = await _tokenService.CreateToken(user);
 
             Assert.NotNull(token);
 
