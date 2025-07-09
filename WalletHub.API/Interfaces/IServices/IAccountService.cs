@@ -16,5 +16,6 @@ namespace WalletHub.API.Interfaces
 
         Task<AuthTokenResponse> RefreshTokenAsync(RefreshTokenRequest request);
         Task<bool> RevokeRefreshTokenAsync(string userId);
+
     }
 }

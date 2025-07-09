@@ -63,7 +63,7 @@ builder.Services.AddFluentValidation();
 builder.Services.AddHangfire(builder.Configuration);
 
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("AuthMessageSenderOptions"));
-builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
+
 
 
 var app = builder.Build();

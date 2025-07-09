@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using WalletHub.API.Services;
 
 namespace WalletHub.API.Extensions
 {
@@ -32,6 +33,9 @@ namespace WalletHub.API.Extensions
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddTransient<IEmailSenderService, EmailSenderService>();
+
+            services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITokenService, TokenService>();
@@ -97,6 +101,24 @@ namespace WalletHub.API.Extensions
         {
             services.Decorate<ICoinMarketCapService, CachedCoinMarketCapService>();
             services.Decorate<IPortfolioService, CachedPortfolioService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddGoogleAuthentication(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+                options.CallbackPath = "/api/auth/google-callback";
+    
+                options.Scope.Add("email");
+                options.Scope.Add("profile");
+
+                options.SaveTokens = true;
+            });
 
             return services;
         }

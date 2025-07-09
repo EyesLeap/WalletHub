@@ -6,11 +6,17 @@ import { toast } from "react-toastify";
 import React from "react";
 import axios from "axios";
 
+type GoogleOAuthDto = {
+  IdToken: string;
+  AccessToken?: string;
+};
+
 type UserContextType = {
   user: UserProfile | null;
   token: string | null;
   registerUser: (email: string, username: string, password: string) => void;
   loginUser: (username: string, password: string) => void;
+  loginWithGoogle: (googleData: GoogleOAuthDto) => Promise<void>;
   logout: () => void;
   isLoggedIn: () => boolean;
 };
@@ -53,7 +59,6 @@ export const UserProvider = ({ children }: Props) => {
           setToken(res?.data.token!);
           setUser(userObj!);
           axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data.token;
-
           toast.success("Welcome!");
           navigate("/dashboard");
         }
@@ -74,12 +79,34 @@ export const UserProvider = ({ children }: Props) => {
           setToken(res?.data.token!);
           setUser(userObj!);
           axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data.token;
-
           toast.success("Login Success!");
           navigate("/dashboard");
         }
       })
       .catch((e) => toast.warning("Server error occured"));
+  };
+
+  const loginWithGoogle = async (googleData: GoogleOAuthDto) => {
+    try {
+      const response = await axios.post(process.env.REACT_APP_API_URL + 'account/google/login', googleData);
+      
+      if (response.data) {
+        localStorage.setItem("token", response.data.token);
+        const userObj = {
+          userName: response.data.userName,
+          email: response.data.email,
+        };
+        localStorage.setItem("user", JSON.stringify(userObj));
+        setToken(response.data.token);
+        setUser(userObj);
+        axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.token;
+        toast.success("Google Login Success!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      throw error;
+    }
   };
 
   const isLoggedIn = () => {
@@ -97,7 +124,7 @@ export const UserProvider = ({ children }: Props) => {
 
   return (
     <UserContext.Provider
-      value={{ loginUser, user, token, logout, isLoggedIn, registerUser }}
+      value={{ loginUser, user, token, logout, isLoggedIn, registerUser, loginWithGoogle }}
     >
       {isReady ? children : null}
     </UserContext.Provider>

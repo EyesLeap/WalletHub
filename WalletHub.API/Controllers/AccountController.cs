@@ -10,6 +10,8 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using WalletHub.API.Dtos.AuthToken;
+using Microsoft.AspNetCore.Authentication;
+using WalletHub.API.Dtos.Account.Google;
 
 namespace WalletHub.API.Controllers
 {
@@ -18,11 +20,14 @@ namespace WalletHub.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IGoogleAuthService _googleAuthService;
 
         public AccountController(
-         IAccountService accountService)
+             IAccountService accountService,
+             IGoogleAuthService googleAuthService)
         {
             _accountService = accountService;
+            _googleAuthService = googleAuthService;
         }
 
         [HttpPost("login")]
@@ -110,6 +115,21 @@ namespace WalletHub.API.Controllers
             await _accountService.RevokeRefreshTokenAsync(userId);
             return Ok(new { message = "Logged out successfully" });
         }
+
+
+        [HttpPost("google/login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleOAuthDto googleOAuthDto)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _googleAuthService.GoogleLoginAsync(googleOAuthDto);          
+
+            return Ok(result);
+         
+        }
+
 
     }
 }

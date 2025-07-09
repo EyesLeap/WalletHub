@@ -12,8 +12,4 @@ namespace WalletHub.API.Dtos.AuthToken
         public string RefreshToken { get; set; }
         public int ExpiresIn { get; set; }
     }
-
-
-
-
 }
